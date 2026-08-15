@@ -1,0 +1,41 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Rattacher le(s) contributeur(s) à un data scientist</h1>
+<p>Un contributeur travaille sous la responsabilité d'un data scientist (son manager),
+   qui lui assignera des lots. Le contributeur héritera automatiquement de la boîte
+   (client) de ce data scientist.</p>
+
+<form method="post">
+  {% csrf_token %}
+
+  <p><strong>Demande(s) concernée(s) :</strong></p>
+  <ul>
+    {% for d in demandes %}
+      <li>{{ d.nom }} — {{ d.email }} (entreprise déclarée : {{ d.entreprise_souhaitee }})
+        <input type="hidden" name="_selected_action" value="{{ d.pk }}">
+      </li>
+    {% endfor %}
+  </ul>
+
+  <p style="margin-top:1.5em;">
+    <label for="data_scientist"><strong>Data scientist référent :</strong></label><br>
+    <select name="data_scientist" id="data_scientist" required style="min-width:340px;padding:6px;margin-top:6px;">
+      <option value="">— Choisir un data scientist —</option>
+      {% for ds in data_scientists %}
+        <option value="{{ ds.id }}">{{ ds.username }} — boîte : {{ ds.client.nom }}</option>
+      {% endfor %}
+    </select>
+  </p>
+  <p class="help" style="color:#666;">
+    Le contributeur sera rattaché à ce data scientist et à sa boîte.
+    Pour une nouvelle boîte cliente, créez d'abord son data scientist
+    dans « Utilisateurs » (rôle Data Scientist + client).
+  </p>
+
+  <input type="hidden" name="action" value="{{ action_name }}">
+  <div class="submit-row" style="margin-top:1.5em;">
+    <input type="submit" name="confirmer_rattachement" value="Créer le(s) compte(s) contributeur(s)" class="default">
+    <a href="../" class="button cancel-link">Annuler</a>
+  </div>
+</form>
+{% endblock %}

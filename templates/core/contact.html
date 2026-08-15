@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Contact — PixBank{% endblock %}
+{% block content %}
+<h1>Contact</h1>
+<p class="help">Une question sur la plateforme ? Écrivez-nous.</p>
+{% if envoye %}<p class="flash flash-success">Message envoyé. Nous vous répondrons rapidement.</p>{% endif %}
+<form method="post" class="form-card" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="field">{{ form.nom.label_tag }}{{ form.nom }}{{ form.nom.errors }}</div>
+    <div class="field">{{ form.email.label_tag }}{{ form.email }}{{ form.email.errors }}</div>
+    <div class="field">{{ form.message.label_tag }}{{ form.message }}{{ form.message.errors }}</div>
+    <div style="position:absolute;left:-5000px;" aria-hidden="true">{{ form.site_web }}</div>
+    <div class="field field-inline">{{ form.consentement }} {{ form.consentement.label_tag }}{{ form.consentement.errors }}</div>
+    <button type="submit" class="btn-primary">Envoyer</button>
+</form>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Déposer — PixBank{% endblock %}
+{% block content %}
+<h1>Déposer des images</h1>
+<p class="help">Sélectionnez une ou plusieurs images. Elles seront visibles après validation par un administrateur. Les doublons sont automatiquement ignorés.</p>
+
+<form method="post" enctype="multipart/form-data" class="form-card">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="field">
+        {{ form.fichiers.label_tag }}
+        {{ form.fichiers }}
+    </div>
+    <div class="field">
+        <span class="field-label">{{ form.categories.label }}</span>
+        <div class="checklist">{{ form.categories }}</div>
+    </div>
+    <div class="field field-inline">
+        {{ form.consentement }} {{ form.consentement.label_tag }}
+    </div>
+    <button type="submit" class="btn-primary">Déposer</button>
+</form>
+{% endblock %}

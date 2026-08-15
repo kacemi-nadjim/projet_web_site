@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Devenir contributeur — PixBank{% endblock %}
+{% block content %}
+<h1>Devenir contributeur</h1>
+<p class="help">Vous souhaitez déposer des images sur la plateforme ? Faites une demande d'accès. Un administrateur la vérifiera avant de créer votre compte — l'accès à des données sensibles ne peut pas être automatique.</p>
+
+{% if envoye %}
+    <p class="flash flash-success">Demande envoyée ! Un administrateur la traitera et vous recevrez vos identifiants par e-mail si elle est approuvée.</p>
+{% endif %}
+
+<form method="post" class="form-card" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+        {% if field.name != "site_web" %}
+            {% if field.field.widget.input_type == "checkbox" %}
+            <div class="field field-consent">
+                <label class="field-inline">
+                    {{ field }}
+                    <span>{{ field.label }}</span>
+                </label>
+                {% if field.help_text %}<p class="hint">{{ field.help_text }}</p>{% endif %}
+                {{ field.errors }}
+            </div>
+            {% else %}
+            <div class="field">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}<p class="hint">{{ field.help_text }}</p>{% endif %}
+                {{ field.errors }}
+            </div>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    <div style="position:absolute;left:-5000px;" aria-hidden="true">{{ form.site_web }}</div>
+    <button type="submit" class="btn-primary">Envoyer ma demande</button>
+</form>
+{% endblock %}

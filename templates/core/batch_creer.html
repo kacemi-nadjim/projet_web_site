@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Nouveau lot — PixBank{% endblock %}
+{% block content %}
+<h1>Créer un lot de travail</h1>
+<div class="info-box">
+    <strong>Format attendu du ZIP de référence :</strong>
+    <pre>mon_lot.zip
+├── images/   (les photos à labéliser)
+└── labels/   (les annotations LabelMe de référence, un .json par image)</pre>
+</div>
+<form method="post" enctype="multipart/form-data" class="form-card">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+    <div class="field">
+        {{ field.label_tag }}{{ field }}
+        {% if field.help_text %}<p class="hint">{{ field.help_text }}</p>{% endif %}
+        {{ field.errors }}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn-primary">Créer le lot</button>
+</form>
+{% endblock %}

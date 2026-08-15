@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Lots de travail — PixBank{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Lots de travail <span class="count">{{ batches|length }}</span></h1>
+    {% if user.is_data_scientist %}
+    <a class="btn-primary" href="{% url 'batch_creer' %}">+ Nouveau lot</a>
+    {% endif %}
+</div>
+<p class="help">Cycle de labélisation : le manager dépose un lot d'images → le stagiaire labélise sur LabelMe → contrôle qualité automatique.</p>
+
+{% if batches %}
+<table class="data-table">
+    <thead><tr><th>Lot</th><th>Images</th><th>Assigné à</th><th>Statut</th><th>Score</th><th></th></tr></thead>
+    <tbody>
+    {% for b in batches %}
+        <tr>
+            <td><strong>{{ b.nom }}</strong></td>
+            <td>{{ b.nb_images }}</td>
+            <td>{{ b.assigne_a.username|default:"—" }}</td>
+            <td><span class="badge-statut badge-{{ b.statut }}">{{ b.get_statut_display }}</span></td>
+            <td>{% if b.score_qualite is not None %}{{ b.score_qualite }}%{% else %}—{% endif %}</td>
+            <td><a href="{% url 'batch_detail' b.id %}">Ouvrir →</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty">Aucun lot pour le moment.{% if user.is_data_scientist %} <a href="{% url 'batch_creer' %}">Créez le premier</a>.{% endif %}</p>
+{% endif %}
+{% endblock %}
