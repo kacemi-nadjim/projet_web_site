@@ -24,13 +24,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError, connection, transaction
-from django.db.models import Count, Q
+from django.db.models import Q
 from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from . import batch_utils, etl, qualite, securite
+from . import batch_utils, etl, qualite, securite, statistiques
 from .forms import (
     BatchCreationForm,
     BatchSoumissionForm,
@@ -311,7 +311,9 @@ def exporter(request):
         cat = Category.objects.filter(id=categorie_id).first()
         libelle_filtre = cat.nom if cat else libelle_filtre
 
-    images = list(qs)          # une seule requête (+1 pour les catégories)
+    # Tri par identifiant : ordre stable, directement fourni par l'index
+    # partiel (client, statut) -> pas de tri de milliers de lignes.
+    images = list(qs.order_by("pk"))   # une requête (+1 pour les catégories)
     if not images:
         messages.warning(request, "Aucune image validée à exporter pour ce filtre.")
         return redirect("galerie")
@@ -333,31 +335,8 @@ def dashboard(request):
     if not request.user.is_data_scientist():
         messages.error(request, "Accès réservé.")
         return redirect("galerie")
-
-    client = request.user.client
-    images = Image.objects.filter(client=client, is_deleted=False)
-    par_categorie = list(
-        Category.objects
-        .filter(images__client=client, images__is_deleted=False)
-        .annotate(n=Count("images")).order_by("-n"))
-    max_cat = par_categorie[0].n if par_categorie else 1
-    stats_statut = images.aggregate(
-        total=Count("id"),
-        validees=Count("id", filter=Q(statut="VALIDEE")),
-        attente=Count("id", filter=Q(statut="ATTENTE")),
-        refusees=Count("id", filter=Q(statut="REFUSEE")),
-        contributeurs=Count("uploaded_by", distinct=True))
-    total = stats_statut["total"] or 1
-    taux_validation = round(100 * stats_statut["validees"] / total)
-    nb_dp = images.filter(categories__donnee_personnelle=True).distinct().count()
-    context = {
-        "stats": stats_statut, "taux_validation": taux_validation,
-        "par_categorie": par_categorie, "max_cat": max_cat,
-        "nb_donnees_perso": nb_dp,
-        "nb_contributeurs": stats_statut["contributeurs"],
-        "exports": Export.objects.filter(client=client).select_related("user")[:10],
-    }
-    return render(request, "core/dashboard.html", context)
+    return render(request, "core/dashboard.html",
+                  statistiques.indicateurs_client(request.user.client))
 
 
 # ============================================================

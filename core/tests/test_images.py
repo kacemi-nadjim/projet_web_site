@@ -93,13 +93,18 @@ class DepotEtDoublonsTest(DonneesDeBase):
             self.assertFalse(mini.getexif())
 
     def test_commande_generer_miniatures(self):
-        img = creer_image(self.wassa, self.contrib)
-        Image.objects.filter(pk=img.pk).update(miniature="")
+        """Cas réel de mise à jour : après la migration 0006, les anciennes
+        images ont une miniature NULL ; d'autres peuvent avoir une valeur vide."""
+        a = creer_image(self.wassa, self.contrib, couleur="#101010")
+        b = creer_image(self.wassa, self.contrib, couleur="#e0e0e0")
+        Image.objects.filter(pk=a.pk).update(miniature=None)
+        Image.objects.filter(pk=b.pk).update(miniature="")
         sortie = io.StringIO()
         call_command("generer_miniatures", stdout=sortie)
-        img.refresh_from_db()
-        self.assertTrue(img.miniature)
-        self.assertIn("1 miniature(s) créée(s)", sortie.getvalue())
+        for img in (a, b):
+            img.refresh_from_db()
+            self.assertTrue(img.miniature.name.endswith(".webp"))
+        self.assertIn("2 miniature(s) créée(s)", sortie.getvalue())
 
     def test_suppression_par_un_tiers_refusee(self):
         img = creer_image(self.wassa, self.contrib)

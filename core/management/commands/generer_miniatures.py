@@ -5,6 +5,7 @@ Usage : python manage.py generer_miniatures
 """
 
 from django.core.management.base import BaseCommand
+from django.db.models import Q
 
 from core.miniatures import creer_miniature
 from core.models import Image
@@ -15,7 +16,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         faites, echecs = 0, 0
-        for image in Image.objects.filter(miniature="").iterator():
+        # Après la migration 0006, les images existantes ont une miniature
+        # NULL (colonne ajoutée) ; celles créées ensuite sans miniature ont "".
+        sans_miniature = Q(miniature="") | Q(miniature__isnull=True)
+        for image in Image.objects.filter(sans_miniature).iterator():
             contenu = creer_miniature(image.fichier)
             if contenu is None:
                 echecs += 1

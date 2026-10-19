@@ -134,7 +134,11 @@ class Image(models.Model):
 
     # Empreinte du fichier : sert à détecter les doublons à l'upload.
     # Deux fichiers identiques produisent le même hash SHA-256.
-    hash_fichier = models.CharField(max_length=64, blank=True, db_index=True)
+    # (v1.1) Plus d'index simple sur ce champ : l'index unique partiel
+    # « image_unique_par_client » sert à la fois de garde-fou et d'index de
+    # recherche pour l'anti-doublon. Sous PostgreSQL, l'ancien index en créait
+    # en réalité deux (dont un pour les recherches LIKE, jamais utilisées).
+    hash_fichier = models.CharField(max_length=64, blank=True)
 
     date_upload = models.DateTimeField(auto_now_add=True)
 
@@ -166,9 +170,12 @@ class Image(models.Model):
             # Anti-doublon garanti par la base : une même empreinte ne peut
             # exister qu'une fois par client parmi les images non supprimées.
             # (index unique PARTIEL : les images supprimées ne comptent pas)
+            # L'empreinte est toujours calculée à l'enregistrement (save) et
+            # la migration 0006 a complété les anciennes lignes qui n'en
+            # avaient pas.
             models.UniqueConstraint(
                 fields=["client", "hash_fichier"],
-                condition=Q(is_deleted=False) & ~Q(hash_fichier=""),
+                condition=Q(is_deleted=False),
                 name="image_unique_par_client",
             ),
         ]
