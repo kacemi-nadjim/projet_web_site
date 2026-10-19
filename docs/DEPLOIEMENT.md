@@ -9,7 +9,7 @@ Le code de référence est le dépôt Git ; chaque version déployée correspond
 ```
 poste de développement                              serveur de production
 ──────────────────────                              ─────────────────────
-1. python manage.py test   (124 tests, SQLite et PostgreSQL)
+1. python manage.py test   (125 tests, SQLite et PostgreSQL)
 2. ruff, bandit, pip-audit (0 alerte)
 3. CHANGELOG + git tag v1.x.y + git push --tags  ─────►  bash outils/deployer.sh v1.x.y
                                                          (sauvegarde → code → dépendances →
@@ -21,7 +21,21 @@ Le script `outils/deployer.sh` **s'arrête à la première erreur**. Le site
 en ligne n'est rechargé que si toutes les étapes ont réussi. Il commence
 toujours par une sauvegarde.
 
-## 2. Première mise en place (passage du ZIP à Git) — à faire une fois
+## 2. Publier la version 1.1.0 sur GitHub — à faire une fois
+
+Sur le poste de développement, dans le dossier du dépôt
+`projet_web_site` déjà cloné :
+```bash
+git tag v1.0.0                 # marque l'état actuel (version soutenue)
+git push origin v1.0.0
+# copier ici le contenu du dossier livré « Projet_code » (en remplaçant les fichiers)
+git add -A
+git commit -m "Version 1.1.0 : sécurité, performance, éco-conception, tests, exploitation"
+git tag v1.1.0
+git push origin main --tags    # ou « master » selon le nom de la branche
+```
+
+## 3. Première mise en place sur le serveur (passage du ZIP à Git) — à faire une fois
 
 La v1.0 avait été déployée en envoyant un ZIP. Pour la v1.1, on passe au
 déploiement par Git, ce qui permet de revenir à une version précédente en
@@ -64,7 +78,7 @@ from config.wsgi import application   # lit les réglages dans .env
 
 Puis lancer le premier déploiement : `bash outils/deployer.sh v1.1.0`.
 
-## 3. Mise à jour courante
+## 4. Mise à jour courante
 
 ```bash
 cd ~/projet_web_site && source venv/bin/activate
@@ -75,7 +89,7 @@ Ensuite :
 - vérifier le numéro de version en pied de page ;
 - faire un parcours rapide : connexion, galerie, export.
 
-## 4. Retour arrière (si la nouvelle version pose problème)
+## 5. Retour arrière (si la nouvelle version pose problème)
 
 **Cas 1 — la nouvelle version n'a pas modifié la base** (aucune migration) :
 ```bash
@@ -98,7 +112,7 @@ python manage.py restaurer backups/pixbank_AAAAMMJJ_HHMMSS --confirmer
 La sauvegarde prise automatiquement au début de chaque déploiement sert
 de point de restauration.
 
-## 5. Passage à PostgreSQL
+## 6. Passage à PostgreSQL
 
 Le code est prêt : il suffit de définir `DATABASE_URL` dans `.env`.
 L'offre gratuite de PythonAnywhere ne propose pas PostgreSQL ; il faut
@@ -111,7 +125,7 @@ une offre payante ou un autre hébergeur.
    Le format de sauvegarde est indépendant du moteur.
 5. Recharger le site, puis vérifier que `/sante/` renvoie `"base_de_donnees": "ok"`.
 
-## 6. Tâches planifiées (onglet « Tasks »)
+## 7. Tâches planifiées (onglet « Tasks »)
 
 | Heure | Commande |
 |---|---|
@@ -119,7 +133,7 @@ une offre payante ou un autre hébergeur.
 | 02:30 | `cd ~/projet_web_site && venv/bin/python manage.py purger_journal` |
 | 02:45 | `cd ~/projet_web_site && venv/bin/python manage.py purger_images_supprimees` |
 
-## 7. Supervision à activer
+## 8. Supervision à activer
 
 1. Créer un moniteur HTTP gratuit (UptimeRobot ou équivalent) sur
    `https://nadjimkacemi.pythonanywhere.com/sante/`, interrogé toutes les

@@ -6,7 +6,9 @@ brute), l'accès protégé aux fichiers déposés, et notre app core.
 
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.templatetags.static import static
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 from core import views
 from core.forms import FormulaireConnexion, FormulaireConnexionAdmin
@@ -25,5 +27,8 @@ urlpatterns = [
     # par une vue qui vérifie la connexion et le cloisonnement client.
     path("media/<path:chemin>", views.media_protege, name="media_protege"),
     path("sante/", views.sante, name="sante"),
+    # Les navigateurs demandent /favicon.ico (le back-office ne déclare pas
+    # d'icône) : on redirige vers l'icône du site au lieu d'une erreur 404.
+    path("favicon.ico", RedirectView.as_view(url=static("favicon.svg"), permanent=True)),
     path("", include("core.urls")),
 ]

@@ -55,10 +55,11 @@ python manage.py purger_images_supprimees  # 02:45 — effacement définitif > 3
 **Procédure pour chaque mise à jour de dépendance** :
 1. Lire les notes de version (changements incompatibles, dépréciations).
 2. Mettre à jour `requirements.txt` sur une branche.
-3. Lancer `python manage.py test` (124 tests) sur SQLite **et** PostgreSQL.
+3. Lancer `python manage.py test` (125 tests) sur SQLite **et** PostgreSQL.
 4. Lancer `check --deploy`, `pip-audit` et `bandit`.
-5. Vérifier l'accessibilité (Lighthouse), car une mise à jour ne doit
-   jamais dégrader la conformité RGAA.
+5. Vérifier l'accessibilité (Lighthouse) et faire la recette visuelle
+   (`outils/verifier_navigateur.py`), car une mise à jour ne doit jamais
+   dégrader l'affichage ni la conformité RGAA.
 6. Mettre à jour le CHANGELOG, poser une étiquette de version, déployer
    (voir [DEPLOIEMENT.md](DEPLOIEMENT.md)).
 

@@ -3,7 +3,7 @@
 Base relationnelle : **PostgreSQL 16** en production (via `DATABASE_URL`),
 **SQLite** en développement local. Le schéma est produit par les
 migrations Django (`core/migrations/`) et il est identique sur les deux
-moteurs. Les 124 tests passent sur les deux (voir [TESTS.md](TESTS.md)).
+moteurs. Les 125 tests passent sur les deux (voir [TESTS.md](TESTS.md)).
 
 ## 1. Modèle relationnel
 

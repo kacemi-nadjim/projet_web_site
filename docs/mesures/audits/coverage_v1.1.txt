@@ -1,7 +1,8 @@
 Name                                                   Stmts   Miss  Cover   Missing
 ------------------------------------------------------------------------------------
 config/__init__.py                                         1      0   100%
-config/settings.py                                        64      7    89%   43, 55-60
+config/env.py                                             14      0   100%
+config/settings.py                                        71      7    90%   43, 64-69
 config/urls.py                                             8      0   100%
 core/__init__.py                                           0      0   100%
 core/admin.py                                            121      5    96%   71, 75-78, 139
@@ -25,10 +26,10 @@ core/miniatures.py                                        30      6    80%   39,
 core/models.py                                           187      8    96%   191-192, 241, 280, 349, 372, 417-418
 core/permissions.py                                       18      0   100%
 core/qualite.py                                           99      2    98%   33, 146
-core/securite.py                                          59      2    97%   68, 99
+core/securite.py                                          59      2    97%   68, 104
 core/signals.py                                           17      0   100%
 core/statistiques.py                                      11      0   100%
 core/urls.py                                               3      0   100%
 core/views.py                                            277     16    94%   211-215, 225, 287-289, 400, 466-469, 498-501
 ------------------------------------------------------------------------------------
-TOTAL                                                   1346     61    95%
+TOTAL                                                   1367     61    96%

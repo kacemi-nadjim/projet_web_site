@@ -40,6 +40,7 @@ part, dans [INCIDENTS.md](INCIDENTS.md).
 | ANO-016 | Dashboard : requête exécutée deux fois et une requête par export | Mineure | mesure des requêtes | Corrigée |
 | ANO-017 | Galerie triée en mémoire à chaque affichage (aucun index adapté) | Mineure | plan d'exécution `EXPLAIN` | Corrigée |
 | ANO-018 | Images supprimées conservées indéfiniment (fichiers compris) | Majeure (RGPD) | audit RGPD | Corrigée |
+| ANO-019 | Défauts d'affichage : vignettes rognées, barres du dashboard vides, cases à cocher décalées | Majeure | recette dans un vrai navigateur | Corrigée |
 
 ## Détail
 
@@ -200,3 +201,20 @@ part, dans [INCIDENTS.md](INCIDENTS.md).
 - **Correction** : la commande quotidienne `purger_images_supprimees`
   efface la ligne et les fichiers après 30 jours de délai de récupération.
 - **Test** : `test_maintenance.test_effacement_definitif_apres_30_jours`.
+
+### ANO-019 — Défauts d'affichage hérités de la v1.0 (Majeure)
+- **Constat** : la recette dans un vrai navigateur (`outils/verifier_navigateur.py`,
+  captures v1.0 / v1.1 comparées) a révélé trois défauts présents depuis la v1.0 :
+  1. galerie : les vignettes montraient un **coin** de la photo à sa taille réelle,
+     au lieu de la photo entière cadrée ;
+  2. dashboard : les barres « Répartition par catégorie » restaient **vides**.
+     La largeur en % était posée sur un `<span>` (élément en ligne), qui l'ignore ;
+  3. dépôt : chaque case à cocher s'affichait centrée **au-dessus** de son libellé.
+- **Correction** : règles CSS ciblées (`.card-img img`, `.bar-fill { display: block }`,
+  `.checklist label`). Le statut de l'image est désormais affiché en
+  pastille sur la vignette.
+- **Vérification** : recette navigateur, sans aucune erreur console ni
+  violation CSP. Captures dans `docs/captures/`.
+- **Enseignement** : les tests automatisés vérifient le HTML produit, pas
+  son rendu visuel. Une recette visuelle dans un navigateur fait désormais
+  partie de la procédure de mise à jour ([MAINTENANCE.md](MAINTENANCE.md)).

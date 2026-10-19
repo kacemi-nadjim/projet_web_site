@@ -17,7 +17,7 @@ Toute anomalie corrigée reçoit un test qui échouerait si elle revenait
 ## 2. Lancer les tests
 
 ```bash
-python manage.py test                       # 124 tests, environ 4 secondes
+python manage.py test                       # 125 tests, environ 4 secondes
 coverage run manage.py test && coverage report   # taux de couverture
 DATABASE_URL=postgres://… python manage.py test  # même suite sur PostgreSQL
 ```
@@ -26,7 +26,7 @@ Les tests sont **isolés** de l'environnement réel (`core/tests/runner.py`) :
 dossier `media/` temporaire, base de test créée puis détruite, journaux
 neutralisés.
 
-## 3. Organisation (124 tests)
+## 3. Organisation (125 tests)
 
 | Fichier | Tests | Fonctionnalités critiques couvertes |
 |---|---:|---|
@@ -34,7 +34,7 @@ neutralisés.
 | `test_securite.py` | 26 | Dépôt de fichiers piégés, bombe ZIP, chemins `../`, accès aux médias, force brute, journal, en-têtes CSP, configuration de production |
 | `test_images.py` | 24 | Dépôt multiple, doublons SHA-256 (code **et** contrainte de base), miniatures, EXIF/GPS, galerie et pagination, export ETL complet, dashboard, back-office, formulaire de contact |
 | `test_lots.py` | 20 | Labélisation de bout en bout avec les vrais ZIP : création, téléchargement sans les réponses, travail réussi → VALIDÉ, travail échoué → À CORRIGER, fichiers invalides, cloisonnement |
-| `test_maintenance.py` | 13 | Sauvegarde puis restauration après sinistre simulé, détection d'une sauvegarde corrompue, rotation, purges RGPD, supervision `/sante/`, contraintes CHECK et PROTECT |
+| `test_maintenance.py` | 14 | Sauvegarde puis restauration après sinistre simulé, détection d'une sauvegarde corrompue, rotation, purges RGPD, supervision `/sante/`, fichier `.env`, contraintes CHECK et PROTECT |
 | `test_qualite.py` | 10 | Moteur IoU : recouvrement partiel exact, polygones, images manquantes, imprécises, catégories interdites, JSON corrompu |
 | `test_pages_et_commandes.py` | 10 | Pages publiques et privées, commandes `seed` et `reset_admin`, workflow d'approbation des inscriptions |
 | `test_performance.py` | 6 | Nombre de requêtes SQL constant (export, galerie, dashboard), index réellement utilisés (`EXPLAIN`) |
@@ -44,8 +44,8 @@ neutralisés.
 
 ### Exécution
 ```
-Ran 124 tests in 3.6s — OK                      (SQLite)
-Ran 124 tests in 5.7s — OK (skipped=3)          (PostgreSQL 16)
+Ran 125 tests in 3.5s — OK                      (SQLite)
+Ran 125 tests in 5.3s — OK (skipped=3)          (PostgreSQL 16)
 ```
 Les 3 tests ignorés sous PostgreSQL lisent un plan d'exécution au format
 propre à SQLite. Sous PostgreSQL, le même contrôle est fait par
@@ -53,14 +53,14 @@ propre à SQLite. Sous PostgreSQL, le même contrôle est fait par
 
 ### Couverture du code (part des lignes exécutées par les tests)
 
-| Module | v1.0 (12 tests) | v1.1 (124 tests) |
+| Module | v1.0 (12 tests) | v1.1 (125 tests) |
 |---|---:|---:|
 | `views.py` (les pages) | 47 % | **94 %** |
 | `batch_utils.py` (import des lots) | 11 % | **98 %** |
 | `qualite.py` (moteur IoU) | 81 % | **98 %** |
 | `models.py` | 91 % | **96 %** |
 | `securite.py`, `etl.py`, `permissions.py` (nouveaux) | — | 97 à 100 % |
-| **Total** | **62 %** | **95 %** |
+| **Total** | **62 %** | **96 %** |
 
 Rapports complets : `docs/mesures/audits/coverage_v1.0.txt` et `coverage_v1.1.txt`.
 Lignes non couvertes restantes : branches de secours, comme un fichier
@@ -88,8 +88,22 @@ Sorties brutes : `docs/mesures/audits/`.
   vérifie, sur chaque page publique, la langue, l'unicité du `h1` et la
   balise `viewport`.
 
+### Recette dans un vrai navigateur
+`outils/verifier_navigateur.py` parcourt le site dans Chromium avec les
+données de démonstration :
+- **0** erreur JavaScript, **0** violation de la politique CSP,
+  **0** ressource en erreur ;
+- photo inaccessible sans connexion (redirection vers la connexion) ;
+- 16 miniatures sur 16 affichées dans la galerie ; export téléchargé ;
+- fichier piégé refusé avec message ;
+- blocage après 5 échecs de connexion ;
+- 20 aperçus sur 20 dans le back-office ;
+- largeur mobile (390 px) respectée, sans défilement horizontal.
+
+Captures : `docs/captures/`.
+
 ## 5. Anomalies découvertes par les tests
 
-La campagne de tests a mis au jour 18 anomalies, dont 4 critiques. Elles
+La campagne de tests a mis au jour 19 anomalies, dont 4 critiques. Elles
 sont toutes corrigées et couvertes par un test. Détail et analyse de
 cause : [REGISTRE_ANOMALIES.md](REGISTRE_ANOMALIES.md).
