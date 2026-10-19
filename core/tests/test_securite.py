@@ -225,7 +225,7 @@ class ConfigurationProductionTest(SimpleTestCase):
             [sys.executable, "-c",
              "import django, os; os.environ.setdefault('DJANGO_SETTINGS_MODULE',"
              "'config.settings'); from django.core.management import "
-             "execute_from_command_line as e; e(['manage.py', *%r])" % (list(args),)],
+             f"execute_from_command_line as e; e(['manage.py', *{list(args)!r}])"],
             cwd=RACINE, env=env, capture_output=True, text=True, timeout=120)
 
     def test_debug_desactive_par_defaut_et_cle_obligatoire(self):

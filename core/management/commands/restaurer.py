@@ -37,7 +37,8 @@ def extraire_sans_risque(tar, destination):
     try:
         tar.extractall(destination, filter="data")  # Python >= 3.10.12
     except TypeError:
-        tar.extractall(destination)  # nosec B202 — chemins vérifiés ci-dessus
+        # Chemins et liens vérifiés ci-dessus avant extraction.
+        tar.extractall(destination)  # noqa: S202  # nosec B202
 
 
 class Command(BaseCommand):

@@ -1,0 +1,6 @@
+# Outils de développement et de contrôle qualité (pas nécessaires en production)
+-r requirements.txt
+coverage==7.16.2          # taux de couverture des tests
+ruff==0.17.1              # analyse statique (PEP 8, erreurs, sécurité)
+bandit==1.9.4             # audit de sécurité du code
+pip-audit==2.10.1         # vulnérabilités connues des dépendances

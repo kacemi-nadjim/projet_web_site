@@ -38,7 +38,7 @@ if not SECRET_KEY:
     if DEBUG:
         # Clé de développement uniquement : jamais utilisée en production,
         # car le site refuse de démarrer sans vraie clé quand DEBUG=False.
-        SECRET_KEY = "dev-only-pixbank-cle-locale-non-secrete-0123456789abcdef"
+        SECRET_KEY = "dev-only-pixbank-cle-locale-non-secrete-0123456789abcdef"  # noqa: S105  # nosec B105
     else:
         raise ImproperlyConfigured(
             "DJANGO_SECRET_KEY doit être défini en production "

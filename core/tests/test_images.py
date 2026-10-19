@@ -20,7 +20,7 @@ from .outils import DonneesDeBase, contenu, image_jpeg
 def couleur(i):
     """Couleurs bien distinctes : deux teintes trop proches donnent le même
     JPEG (donc la même empreinte), ce qui serait un doublon."""
-    return "#{:02x}{:02x}{:02x}".format((i * 97) % 256, (i * 57 + 80) % 256, (i * 23 + 160) % 256)
+    return f"#{(i * 97) % 256:02x}{(i * 57 + 80) % 256:02x}{(i * 23 + 160) % 256:02x}"
 
 
 def creer_image(client, auteur, statut="VALIDEE", couleur="#0e9f6e", categories=()):

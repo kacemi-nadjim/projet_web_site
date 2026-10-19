@@ -21,7 +21,7 @@ class ReglesAccesTest(DonneesDeBase):
         }
         users = [self.ds, self.contrib, self.contrib2, self.ds_acme,
                  self.contrib_acme, self.admin]
-        for (libelle, (voir, gerer)), user in zip(attendu.items(), users):
+        for (libelle, (voir, gerer)), user in zip(attendu.items(), users, strict=True):
             with self.subTest(libelle):
                 self.assertEqual(peut_voir_lot(user, lot), voir)
                 self.assertEqual(peut_gerer_lot(user, lot), gerer)

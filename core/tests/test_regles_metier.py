@@ -7,6 +7,7 @@ v1.1 : seule adaptation, l'export renvoie désormais une réponse en flux
 """
 
 import io
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from PIL import Image as PIL
@@ -91,7 +92,7 @@ class InscriptionTest(BaseData):
     def test_demande_enregistree_sans_compte(self):
         from core.models import DemandeInscription, User
         nb_users_avant = User.objects.count()
-        r = self.client.post("/inscription/", {
+        self.client.post("/inscription/", {
             "nom": "Nouveau Contributeur",
             "email": "nouveau@example.com",
             "entreprise_souhaitee": "Wassa",
@@ -108,7 +109,7 @@ class InscriptionTest(BaseData):
     def test_inscription_sans_consentement_rgpd_refusee(self):
         """Sans cocher le consentement RGPD, la demande n'est pas enregistrée."""
         from core.models import DemandeInscription
-        r = self.client.post("/inscription/", {
+        self.client.post("/inscription/", {
             "nom": "Sans Consentement",
             "email": "refus@example.com",
             "entreprise_souhaitee": "Wassa",
@@ -121,7 +122,10 @@ class InscriptionTest(BaseData):
 class QualiteTest(TestCase):
     """Le moteur de contrôle qualité calcule correctement l'IoU et les statuts."""
     def test_iou_et_rapport(self):
-        import io, json, zipfile
+        import io
+        import json
+        import zipfile
+
         from core.qualite import controler, iou
 
         # IoU de rectangles identiques = 1.0
@@ -134,9 +138,9 @@ class QualiteTest(TestCase):
             with zipfile.ZipFile(buf, "w") as zf:
                 for nom, (shapes, flou) in specs.items():
                     data = {"flags": {"flou": True} if flou else {},
-                            "shapes": [{"label": l, "points": [[a, b], [c, d]],
+                            "shapes": [{"label": lab, "points": [[a, b], [c, d]],
                                         "shape_type": "rectangle"}
-                                       for (l, a, b, c, d) in shapes]}
+                                       for (lab, a, b, c, d) in shapes]}
                     zf.writestr(f"labels/{nom}.json", json.dumps(data))
             buf.seek(0)
             return buf
@@ -155,17 +159,18 @@ class QualiteTest(TestCase):
 class ApprobationCompteTest(TestCase):
     """L'approbation rattache le contributeur à un data scientist et crée le compte."""
     def test_approbation_rattache_au_data_scientist(self):
-        from core.models import DemandeInscription, User, Client
+        from core.models import Client, DemandeInscription, User
 
         # Une boîte cliente avec son data scientist (le manager)
         boite = Client.objects.create(nom="Wassa")
         ds = User(username="ds_ref", email="ds@wassa.com",
                   role=User.Role.DATA_SCIENTIST, client=boite)
-        ds.set_password("x"); ds.save()
+        ds.set_password("x")
+        ds.save()
 
         # Un admin
-        admin_user = User.objects.create_user("tmpadmin", password="adminpass",
-                                              is_superuser=True, is_staff=True)
+        User.objects.create_user("tmpadmin", password="adminpass",
+                                 is_superuser=True, is_staff=True)
         d = DemandeInscription.objects.create(
             nom="Test User", email="test.user@wassa.com",
             entreprise_souhaitee="Wassa", motivation="Test.")
@@ -192,7 +197,8 @@ class ApprobationCompteTest(TestCase):
         self.assertEqual(nouveau.client, boite)
 
         # Le compte est connectable
-        nouveau.set_password("motdepasse_test"); nouveau.save()
+        nouveau.set_password("motdepasse_test")
+        nouveau.save()
         self.assertTrue(self.client.login(
             username=nouveau.username, password="motdepasse_test"))
 
@@ -200,15 +206,17 @@ class ApprobationCompteTest(TestCase):
 class RattachementContributeurTest(TestCase):
     """Un contributeur rattaché à un DS voit ses lots, et le DS peut l'assigner."""
     def test_ds_assigne_et_contributeur_voit_son_lot(self):
-        from core.models import Client, User, Batch
         from core.forms import BatchCreationForm
+        from core.models import Batch, Client, User
 
         boite = Client.objects.create(nom="NouvelleBoite")
         ds = User(username="ds_x", role=User.Role.DATA_SCIENTIST, client=boite)
-        ds.set_password("p"); ds.save()
+        ds.set_password("p")
+        ds.save()
         contrib = User(username="contrib_x", role=User.Role.CONTRIBUTEUR,
                        client=boite, manager=ds)
-        contrib.set_password("p"); contrib.save()
+        contrib.set_password("p")
+        contrib.save()
 
         # 1. Le DS trouve le contributeur dans la liste d'assignation
         form = BatchCreationForm(client=ds.client, manager=ds)
@@ -224,15 +232,18 @@ class RattachementContributeurTest(TestCase):
         self.assertEqual(self.client.get(f"/lots/{lot.id}/").status_code, 200)
 
     def test_contributeur_ne_voit_pas_lot_autre_boite(self):
-        from core.models import Client, User, Batch
+        from core.models import Batch, Client, User
         b1 = Client.objects.create(nom="B1")
         b2 = Client.objects.create(nom="B2")
         ds1 = User(username="ds_1", role=User.Role.DATA_SCIENTIST, client=b1)
-        ds1.set_password("p"); ds1.save()
+        ds1.set_password("p")
+        ds1.save()
         c1 = User(username="c_1", role=User.Role.CONTRIBUTEUR, client=b1, manager=ds1)
-        c1.set_password("p"); c1.save()
+        c1.set_password("p")
+        c1.save()
         c2 = User(username="c_2", role=User.Role.CONTRIBUTEUR, client=b2)
-        c2.set_password("p"); c2.save()
+        c2.set_password("p")
+        c2.save()
         lot = Batch.objects.create(nom="Lot Privé", client=b1, cree_par=ds1,
                                    assigne_a=c1, nb_images=0, statut="A_FAIRE")
         # c2 (autre boîte) ne voit pas le lot et ne peut pas y accéder
@@ -245,10 +256,11 @@ class RattachementContributeurTest(TestCase):
 class ChangementMotDePasseTest(TestCase):
     """Chaque utilisateur peut modifier son propre mot de passe."""
     def test_utilisateur_change_son_mot_de_passe(self):
-        from core.models import User, Client
+        from core.models import Client, User
         boite = Client.objects.create(nom="Boite")
         u = User(username="user_x", role=User.Role.CONTRIBUTEUR, client=boite)
-        u.set_password("AncienMdp2026!"); u.save()
+        u.set_password("AncienMdp2026!")
+        u.save()
 
         self.client.login(username="user_x", password="AncienMdp2026!")
         # La page est accessible

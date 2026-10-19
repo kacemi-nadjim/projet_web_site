@@ -8,8 +8,7 @@ n'a besoin d'y penser, et rien ne peut être oublié.
 
 import logging
 
-from django.contrib.auth.signals import (user_logged_in, user_logged_out,
-                                         user_login_failed)
+from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
 
 from .models import JournalAcces

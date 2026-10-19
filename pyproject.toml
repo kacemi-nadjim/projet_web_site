@@ -1,0 +1,23 @@
+# Configuration des outils de qualité du code (v1.1)
+# Lancer : ruff check .   (analyse statique : erreurs, imports, style PEP 8)
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["core/migrations"]
+
+[tool.ruff.lint]
+# E/W : style PEP 8   F : erreurs (pyflakes)   I : ordre des imports
+# B : pièges courants (bugbear)   UP : syntaxe Python moderne
+# S : sécurité (règles bandit)   DJ : bonnes pratiques Django
+select = ["E", "W", "F", "I", "B", "UP", "S", "DJ"]
+ignore = [
+    "DJ001",   # null=True sur CharField : aucun dans le projet, règle trop stricte
+]
+
+[tool.ruff.lint.per-file-ignores]
+"core/tests/*" = ["S101", "S105", "S106", "S603", "S404", "E501"]
+"core/management/commands/seed.py" = ["S311"]   # aléatoire non cryptographique : données de démo
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "config"]

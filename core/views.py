@@ -31,11 +31,15 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from . import batch_utils, etl, qualite, securite
-from .forms import (BatchCreationForm, BatchSoumissionForm, ContactForm,
-                    DemandeInscriptionForm, ImageUploadForm)
-from .models import (Batch, Category, Export, Image, JournalAcces,
-                     MessageContact, calculer_hash)
-from .permissions import (peut_gerer_lot, peut_voir_image, peut_voir_lot)
+from .forms import (
+    BatchCreationForm,
+    BatchSoumissionForm,
+    ContactForm,
+    DemandeInscriptionForm,
+    ImageUploadForm,
+)
+from .models import Batch, Category, Export, Image, JournalAcces, MessageContact, calculer_hash
+from .permissions import peut_gerer_lot, peut_voir_image, peut_voir_lot
 
 logger = logging.getLogger("pixbank.vues")
 
@@ -211,9 +215,11 @@ def upload(request):
                     continue
                 deposees += 1
             if deposees:
-                messages.success(request, f"{deposees} image(s) déposée(s), en attente de validation.")
+                messages.success(
+                    request, f"{deposees} image(s) déposée(s), en attente de validation.")
             if doublons:
-                messages.warning(request, f"{doublons} image(s) ignorée(s) : déjà présentes (doublon).")
+                messages.warning(
+                    request, f"{doublons} image(s) ignorée(s) : déjà présentes (doublon).")
             return redirect("galerie")
     else:
         form = ImageUploadForm()

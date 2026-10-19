@@ -54,8 +54,10 @@ def iou(boxA, boxB):
     """Intersection over Union entre deux rectangles."""
     if not boxA or not boxB:
         return 0.0
-    xA = max(boxA[0], boxB[0]); yA = max(boxA[1], boxB[1])
-    xB = min(boxA[2], boxB[2]); yB = min(boxA[3], boxB[3])
+    xA = max(boxA[0], boxB[0])
+    yA = max(boxA[1], boxB[1])
+    xB = min(boxA[2], boxB[2])
+    yB = min(boxA[3], boxB[3])
     inter = max(0, xB - xA) * max(0, yB - yA)
     if inter == 0:
         return 0.0
@@ -152,8 +154,8 @@ def controler(zip_reference, zip_travail, categories_autorisees=None):
     rapport = {
         "score_global": score_global,
         "nb_images": len(ref),
-        "nb_correctes": sum(1 for l in lignes if l["statut"] == "ok"),
-        "nb_imprecises": sum(1 for l in lignes if l["statut"] == "imprecis"),
+        "nb_correctes": sum(1 for lg in lignes if lg["statut"] == "ok"),
+        "nb_imprecises": sum(1 for lg in lignes if lg["statut"] == "imprecis"),
         "nb_manquantes": nb_manquantes,
         "nb_floues": nb_floues,
         "nb_erreurs_categorie": nb_erreurs_cat,

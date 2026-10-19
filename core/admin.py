@@ -8,8 +8,17 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils import timezone
 from django.utils.html import format_html
 
-from .models import (Batch, Category, Client, DemandeInscription, Export,
-                     Image, JournalAcces, MessageContact, User)
+from .models import (
+    Batch,
+    Category,
+    Client,
+    DemandeInscription,
+    Export,
+    Image,
+    JournalAcces,
+    MessageContact,
+    User,
+)
 
 
 @admin.register(User)
@@ -107,8 +116,10 @@ class DemandeInscriptionAdmin(admin.ModelAdmin):
         page intermédiaire. Le contributeur hérite du client de ce data scientist.
         """
         import secrets
-        from django.shortcuts import render
+
         from django.http import HttpResponseRedirect
+        from django.shortcuts import render
+
         from .models import User
 
         # Étape 2 : l'admin a validé le formulaire avec le data scientist choisi
@@ -129,7 +140,8 @@ class DemandeInscriptionAdmin(admin.ModelAdmin):
                 base = demande.email.split("@")[0].lower()
                 username, i = base, 1
                 while User.objects.filter(username=username).exists():
-                    i += 1; username = f"{base}{i}"
+                    i += 1
+                    username = f"{base}{i}"
                 mdp = secrets.token_urlsafe(9)
                 # Le contributeur hérite du client de son manager (data scientist)
                 user = User(username=username, email=demande.email,

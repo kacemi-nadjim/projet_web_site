@@ -173,6 +173,9 @@ class Image(models.Model):
             ),
         ]
 
+    def __str__(self):
+        return f"{self.fichier.name}"
+
     def save(self, *args, **kwargs):
         if self.fichier and not self.largeur:
             try:
@@ -198,9 +201,6 @@ class Image(models.Model):
         # catégories ont été préchargées (prefetch_related), aucune requête
         # SQL supplémentaire n'est faite (corrige un problème N+1 de l'export).
         return any(c.donnee_personnelle for c in self.categories.all())
-
-    def __str__(self):
-        return f"{self.fichier.name}"
 
 
 def calculer_hash(fichier):

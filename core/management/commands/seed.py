@@ -8,9 +8,10 @@ import random
 
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
-from PIL import Image as PILImage, ImageDraw
+from PIL import Image as PILImage
+from PIL import ImageDraw
 
-from core.models import Category, Client, Image, calculer_hash, User
+from core.models import Category, Client, Image, User, calculer_hash
 
 CATEGORIES = [
     ("Visage", True, "Visages humains (détection/floutage)."),
@@ -29,15 +30,18 @@ def fake_image(label, couleur, n):
     d.text((60, 60), f"DEMO #{n} — {label}", fill="white")
     buf = io.BytesIO()
     img.save(buf, format="JPEG")
-    return ContentFile(buf.getvalue(), name=f"demo_{n}_{random.randint(100,999)}.jpg")  # nosec B311 — données de démo, aucun usage cryptographique
+    # Aléatoire non cryptographique : uniquement pour nommer des images de démo.
+    return ContentFile(buf.getvalue(), name=f"demo_{n}_{random.randint(100,999)}.jpg")  # nosec B311
 
 
 class Command(BaseCommand):
     help = "Remplit la base avec des données de démonstration"
 
     def handle(self, *args, **options):
-        wassa, _ = Client.objects.get_or_create(nom="Wassa", defaults={"secteur": "IA / Computer vision"})
-        acme, _ = Client.objects.get_or_create(nom="ACME Parking", defaults={"secteur": "Gestion de parkings"})
+        wassa, _ = Client.objects.get_or_create(
+            nom="Wassa", defaults={"secteur": "IA / Computer vision"})
+        acme, _ = Client.objects.get_or_create(
+            nom="ACME Parking", defaults={"secteur": "Gestion de parkings"})
 
         for username, role, client, su in [
             ("admin", "ADMIN", wassa, True),
@@ -55,7 +59,8 @@ class Command(BaseCommand):
 
         cats = {}
         for nom, dp, desc in CATEGORIES:
-            cat, _ = Category.objects.get_or_create(nom=nom, defaults={"donnee_personnelle": dp, "description": desc})
+            cat, _ = Category.objects.get_or_create(
+                nom=nom, defaults={"donnee_personnelle": dp, "description": desc})
             cats[nom] = cat
 
         if Image.objects.count() == 0:
@@ -70,7 +75,9 @@ class Command(BaseCommand):
                 img = Image(client=user.client, uploaded_by=user,
                             hash_fichier=empreinte,
                             consentement=True,
-                            statut=random.choice([Image.Statut.VALIDEE, Image.Statut.VALIDEE, Image.Statut.EN_ATTENTE]))  # nosec B311
+                            statut=random.choice([Image.Statut.VALIDEE,  # nosec B311
+                                                  Image.Statut.VALIDEE,
+                                                  Image.Statut.EN_ATTENTE]))
                 img.fichier.save(contenu.name, contenu)
                 # multi-catégories : parfois 1, parfois 2 labels
                 choix = [cats[noms[i % len(noms)]]]

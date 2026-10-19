@@ -1,4 +1,7 @@
-Django==5.2.15
-Pillow>=10.0
-# Pour PostgreSQL (avant le rendu final) :
-# psycopg2-binary>=2.9
+# Dépendances de production — versions figées (reproductibilité).
+# Mise à jour : voir docs/MAINTENANCE.md (contrôle mensuel avec pip-audit).
+# Compatibles Python 3.10 à 3.13 (PythonAnywhere : Python 3.10).
+Django==5.2.18            # LTS, correctifs de sécurité jusqu'en avril 2028
+Pillow==12.3.0            # lecture/validation des images, miniatures WebP
+dj-database-url==3.1.2    # configuration de la base via DATABASE_URL
+psycopg[binary]==3.3.6    # pilote PostgreSQL

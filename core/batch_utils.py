@@ -65,7 +65,7 @@ def analyser_zip_reference(fichier_zip):
                        "de référence (un par image)."), None
 
     # Vérifie que les JSON de référence sont valides
-    for cle, chemin in labels.items():
+    for chemin in labels.values():
         try:
             json.loads(zf.read(chemin).decode("utf-8"))
         except (json.JSONDecodeError, UnicodeDecodeError):
