@@ -1,7 +1,9 @@
 """
-TESTS.PY — Tests automatisés (exigence du jury : tests unitaires + intégration).
+TEST_REGLES_METIER.PY — Les 12 tests de la v1.0 (règles métier critiques).
 Lancer avec : python manage.py test
-Ces tests prouvent que les règles métier critiques fonctionnent.
+
+v1.1 : seule adaptation, l'export renvoie désormais une réponse en flux
+(FileResponse) -> on lit son contenu avec streaming_content.
 """
 
 import io
@@ -9,7 +11,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from PIL import Image as PIL
 
-from .models import Category, Client, Image, User
+from core.models import Category, Client, Image, User
 
 
 def img_file(name="t.jpg", color="#0e9f6e"):
@@ -68,7 +70,7 @@ class ExportTest(BaseData):
         r = self.client.get("/exporter/")
         self.assertEqual(r["Content-Type"], "application/zip")
         import zipfile
-        zf = zipfile.ZipFile(io.BytesIO(r.content))
+        zf = zipfile.ZipFile(io.BytesIO(b"".join(r.streaming_content)))
         self.assertIn("annotations.csv", zf.namelist())
 
 
@@ -87,7 +89,7 @@ class SoftDeleteTest(BaseData):
 class InscriptionTest(BaseData):
     """Une demande d'inscription ne crée jamais de compte automatiquement."""
     def test_demande_enregistree_sans_compte(self):
-        from .models import DemandeInscription, User
+        from core.models import DemandeInscription, User
         nb_users_avant = User.objects.count()
         r = self.client.post("/inscription/", {
             "nom": "Nouveau Contributeur",
@@ -105,7 +107,7 @@ class InscriptionTest(BaseData):
 
     def test_inscription_sans_consentement_rgpd_refusee(self):
         """Sans cocher le consentement RGPD, la demande n'est pas enregistrée."""
-        from .models import DemandeInscription
+        from core.models import DemandeInscription
         r = self.client.post("/inscription/", {
             "nom": "Sans Consentement",
             "email": "refus@example.com",
@@ -120,7 +122,7 @@ class QualiteTest(TestCase):
     """Le moteur de contrôle qualité calcule correctement l'IoU et les statuts."""
     def test_iou_et_rapport(self):
         import io, json, zipfile
-        from .qualite import controler, iou
+        from core.qualite import controler, iou
 
         # IoU de rectangles identiques = 1.0
         self.assertEqual(iou((0, 0, 10, 10), (0, 0, 10, 10)), 1.0)
@@ -153,7 +155,7 @@ class QualiteTest(TestCase):
 class ApprobationCompteTest(TestCase):
     """L'approbation rattache le contributeur à un data scientist et crée le compte."""
     def test_approbation_rattache_au_data_scientist(self):
-        from .models import DemandeInscription, User, Client
+        from core.models import DemandeInscription, User, Client
 
         # Une boîte cliente avec son data scientist (le manager)
         boite = Client.objects.create(nom="Wassa")
@@ -198,8 +200,8 @@ class ApprobationCompteTest(TestCase):
 class RattachementContributeurTest(TestCase):
     """Un contributeur rattaché à un DS voit ses lots, et le DS peut l'assigner."""
     def test_ds_assigne_et_contributeur_voit_son_lot(self):
-        from .models import Client, User, Batch
-        from .forms import BatchCreationForm
+        from core.models import Client, User, Batch
+        from core.forms import BatchCreationForm
 
         boite = Client.objects.create(nom="NouvelleBoite")
         ds = User(username="ds_x", role=User.Role.DATA_SCIENTIST, client=boite)
@@ -222,7 +224,7 @@ class RattachementContributeurTest(TestCase):
         self.assertEqual(self.client.get(f"/lots/{lot.id}/").status_code, 200)
 
     def test_contributeur_ne_voit_pas_lot_autre_boite(self):
-        from .models import Client, User, Batch
+        from core.models import Client, User, Batch
         b1 = Client.objects.create(nom="B1")
         b2 = Client.objects.create(nom="B2")
         ds1 = User(username="ds_1", role=User.Role.DATA_SCIENTIST, client=b1)
@@ -243,7 +245,7 @@ class RattachementContributeurTest(TestCase):
 class ChangementMotDePasseTest(TestCase):
     """Chaque utilisateur peut modifier son propre mot de passe."""
     def test_utilisateur_change_son_mot_de_passe(self):
-        from .models import User, Client
+        from core.models import User, Client
         boite = Client.objects.create(nom="Boite")
         u = User(username="user_x", role=User.Role.CONTRIBUTEUR, client=boite)
         u.set_password("AncienMdp2026!"); u.save()

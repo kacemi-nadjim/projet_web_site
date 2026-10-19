@@ -19,6 +19,7 @@ import json
 import zipfile
 
 SEUIL_IOU = 0.5          # au-dessus, l'annotation est jugée correcte
+SEUIL_VALIDATION_LOT = 70  # score global (%) à partir duquel le lot est validé
 FLAGS_FLOU = ("flou", "inexploitable", "blurry", "unusable")
 
 

@@ -5,11 +5,11 @@ L'admin valide les dépôts, gère catégories, clients et utilisateurs.
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-
 from django.utils import timezone
+from django.utils.html import format_html
+
 from .models import (Batch, Category, Client, DemandeInscription, Export,
-                     MessageContact,
-                     Image, User)
+                     Image, JournalAcces, MessageContact, User)
 
 
 @admin.register(User)
@@ -45,11 +45,28 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     """Écran de validation des dépôts : le workflow qualité."""
-    list_display = ("__str__", "client", "uploaded_by", "statut",
+    list_display = ("apercu", "__str__", "client", "uploaded_by", "statut",
                     "consentement", "date_upload", "is_deleted")
     list_filter = ("statut", "categories", "client", "is_deleted")
+    list_select_related = ("client", "uploaded_by")   # évite N+1 requêtes
     filter_horizontal = ("categories",)
+    readonly_fields = ("apercu_grand", "hash_fichier", "largeur", "hauteur")
     actions = ["valider", "refuser"]
+
+    @admin.display(description="Aperçu")
+    def apercu(self, obj):
+        # La miniature (quelques Ko) suffit pour valider visuellement.
+        if obj.miniature:
+            return format_html('<img src="{}" alt="" style="height:48px;'
+                               'border-radius:4px">', obj.miniature.url)
+        return "—"
+
+    @admin.display(description="Aperçu")
+    def apercu_grand(self, obj):
+        if obj.miniature:
+            return format_html('<img src="{}" alt="" style="max-height:320px">',
+                               obj.miniature.url)
+        return "—"
 
     @admin.action(description="Valider les images sélectionnées")
     def valider(self, request, queryset):
@@ -66,6 +83,7 @@ class ImageAdmin(admin.ModelAdmin):
 class ExportAdmin(admin.ModelAdmin):
     list_display = ("user", "client", "date", "nb_images", "filtre_applique")
     list_filter = ("client",)
+    list_select_related = ("user", "client")
 
 
 @admin.register(DemandeInscription)
@@ -154,6 +172,7 @@ class BatchAdmin(admin.ModelAdmin):
     list_display = ("nom", "client", "assigne_a", "statut", "nb_images",
                     "score_qualite", "date_creation")
     list_filter = ("statut", "client")
+    list_select_related = ("client", "assigne_a")
 
 
 @admin.register(MessageContact)
@@ -165,3 +184,27 @@ class MessageContactAdmin(admin.ModelAdmin):
     readonly_fields = ("nom", "email", "message", "consentement", "date_envoi")
     list_editable = ("traite",)
     fields = ("nom", "email", "message", "consentement", "date_envoi", "traite")
+
+
+@admin.register(JournalAcces)
+class JournalAccesAdmin(admin.ModelAdmin):
+    """
+    Consultation du journal de sécurité. Il est en LECTURE SEULE : personne,
+    même un administrateur, ne peut créer ou modifier une entrée à la main
+    (un journal modifiable ne prouverait rien). La purge se fait uniquement
+    par la commande « purger_journal » (durée de conservation RGPD).
+    """
+    list_display = ("date", "evenement", "utilisateur", "identifiant", "ip", "detail")
+    list_filter = ("evenement", "date")
+    search_fields = ("identifiant", "ip", "detail")
+    list_select_related = ("utilisateur",)
+    date_hierarchy = "date"
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

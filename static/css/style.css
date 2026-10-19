@@ -5,6 +5,24 @@
    Signature : crochets d'annotation [ ] (bounding boxes).
    ============================================================ */
 
+/* ============================================================
+   POLICES AUTO-HÉBERGÉES (v1.1)
+   Avant : chargées depuis Google Fonts -> 2 requêtes vers un serveur
+   tiers à chaque visite et transfert de l'adresse IP du visiteur à
+   Google (problème RGPD). Désormais servies par notre propre serveur,
+   uniquement les graisses utilisées, au format compressé WOFF2.
+   ============================================================ */
+@font-face { font-family: "Sora"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("../fonts/sora-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Sora"; font-style: normal; font-weight: 600; font-display: swap;
+  src: url("../fonts/sora-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Sora"; font-style: normal; font-weight: 700; font-display: swap;
+  src: url("../fonts/sora-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap;
+  src: url("../fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2"); }
+
 :root {
     --ink: #0f1620;
     --ink-soft: #4a5361;
@@ -310,3 +328,19 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); box-sha
     accent-color: var(--accent); cursor: pointer;
 }
 .field-consent span { font-size: .92rem; color: var(--ink); line-height: 1.5; }
+
+/* ---------- Pagination de la galerie (v1.1) ---------- */
+.pagination { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+  justify-content: center; margin: 2rem 0 1rem; }
+.pagination a, .pagination span { padding: .45rem .85rem; border-radius: var(--radius-sm);
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  text-decoration: none; font-size: .9rem; }
+.pagination a:hover, .pagination a:focus-visible { border-color: var(--accent); box-shadow: var(--ring); }
+.pagination .page-courante { background: var(--accent-soft); border-color: var(--accent);
+  color: var(--accent-dark); font-weight: 600; }
+
+/* ---------- Pied de page : numéro de version ---------- */
+.version { font-family: "IBM Plex Mono", monospace; font-size: .8rem; color: var(--ink-faint); }
+
+/* ---------- Champ anti-spam (remplace un style en ligne) ---------- */
+.champ-piege { position: absolute; left: -5000px; }

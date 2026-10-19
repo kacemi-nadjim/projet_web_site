@@ -1,0 +1,11 @@
+[run]
+source = core, config
+omit =
+    core/migrations/*
+    core/tests/*
+    config/asgi.py
+    config/wsgi.py
+
+[report]
+show_missing = True
+skip_covered = False

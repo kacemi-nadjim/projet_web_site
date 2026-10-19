@@ -29,7 +29,7 @@ def fake_image(label, couleur, n):
     d.text((60, 60), f"DEMO #{n} — {label}", fill="white")
     buf = io.BytesIO()
     img.save(buf, format="JPEG")
-    return ContentFile(buf.getvalue(), name=f"demo_{n}_{random.randint(100,999)}.jpg")
+    return ContentFile(buf.getvalue(), name=f"demo_{n}_{random.randint(100,999)}.jpg")  # nosec B311 — données de démo, aucun usage cryptographique
 
 
 class Command(BaseCommand):
@@ -70,7 +70,7 @@ class Command(BaseCommand):
                 img = Image(client=user.client, uploaded_by=user,
                             hash_fichier=empreinte,
                             consentement=True,
-                            statut=random.choice([Image.Statut.VALIDEE, Image.Statut.VALIDEE, Image.Statut.EN_ATTENTE]))
+                            statut=random.choice([Image.Statut.VALIDEE, Image.Statut.VALIDEE, Image.Statut.EN_ATTENTE]))  # nosec B311
                 img.fichier.save(contenu.name, contenu)
                 # multi-catégories : parfois 1, parfois 2 labels
                 choix = [cats[noms[i % len(noms)]]]

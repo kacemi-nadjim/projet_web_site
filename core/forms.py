@@ -4,7 +4,11 @@ Règle d'or : ne jamais faire confiance aux saisies utilisateur.
 """
 
 from django import forms
-from .models import Category
+from django.contrib.admin.forms import AdminAuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
+
+from . import securite
+from .models import Category, JournalAcces
 
 
 class MultiFileInput(forms.ClearableFileInput):
@@ -31,7 +35,11 @@ class MultiFileField(forms.FileField):
 
 class ImageUploadForm(forms.Form):
     """Formulaire de dépôt : upload multiple + multi-catégories + RGPD."""
-    fichiers = MultiFileField(label="Images à déposer (plusieurs possibles)")
+    fichiers = MultiFileField(
+        label="Images à déposer (plusieurs possibles)",
+        widget=MultiFileInput(attrs={
+            "multiple": True,
+            "accept": "image/jpeg,image/png,image/webp,image/bmp"}))
     categories = forms.ModelMultipleChoiceField(
         queryset=Category.objects.all(),
         widget=forms.CheckboxSelectMultiple,
@@ -40,6 +48,21 @@ class ImageUploadForm(forms.Form):
         required=False,
         label="Je certifie disposer du consentement / d'une base légale "
               "pour les données personnelles (RGPD)")
+
+    def clean_fichiers(self):
+        """Chaque fichier doit être une VRAIE image (contenu vérifié avec
+        Pillow) : l'extension ou le type annoncé par le navigateur ne
+        suffisent pas, ils sont falsifiables (anomalie ANO-003)."""
+        fichiers = self.cleaned_data["fichiers"]
+        erreurs = []
+        for f in fichiers:
+            try:
+                securite.valider_image(f)
+            except forms.ValidationError as e:
+                erreurs.extend(e.messages)
+        if erreurs:
+            raise forms.ValidationError(erreurs)
+        return fichiers
 
     def clean(self):
         data = super().clean()
@@ -140,3 +163,34 @@ class BatchSoumissionForm(forms.Form):
     """Soumission du travail par le stagiaire : son ZIP labélisé."""
     zip_travail = forms.FileField(
         label="Votre ZIP de travail (vos fichiers labels/ au format LabelMe)")
+
+
+class LimiteTentativesMixin:
+    """
+    Anti force brute : après 5 échecs en 15 minutes sur un même
+    identifiant, la connexion est refusée — même avec le bon mot de passe —
+    jusqu'à la fin de la fenêtre. Chaque blocage est journalisé.
+    """
+    error_messages = {
+        **AuthenticationForm.error_messages,
+        "bloque": "Trop de tentatives de connexion échouées. Pour votre "
+                  "sécurité, réessayez dans 15 minutes.",
+    }
+
+    def clean(self):
+        identifiant = (self.data.get("username") or "").strip()
+        if identifiant and securite.connexion_bloquee(identifiant):
+            JournalAcces.enregistrer(JournalAcces.Evenement.CONNEXION_BLOQUEE,
+                                     request=self.request,
+                                     identifiant=identifiant)
+            raise forms.ValidationError(self.error_messages["bloque"],
+                                        code="bloque")
+        return super().clean()
+
+
+class FormulaireConnexion(LimiteTentativesMixin, AuthenticationForm):
+    """Formulaire de connexion du site."""
+
+
+class FormulaireConnexionAdmin(LimiteTentativesMixin, AdminAuthenticationForm):
+    """Même protection pour la connexion au back-office."""

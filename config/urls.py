@@ -1,22 +1,29 @@
 """
 URLS.PY (projet) — Le routeur principal.
-Branche : l'admin Django, l'authentification fournie par Django
-(login/logout/changement de mot de passe), et notre app core.
+Branche : l'admin Django, l'authentification (avec protection anti force
+brute), l'accès protégé aux fichiers déposés, et notre app core.
 """
 
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.urls import include, path
+
+from core import views
+from core.forms import FormulaireConnexion, FormulaireConnexionAdmin
+
+# Le back-office utilise le même anti force brute que le site.
+admin.site.login_form = FormulaireConnexionAdmin
+admin.site.site_header = "PixBank — Back-office"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("compte/login/",
+         auth_views.LoginView.as_view(authentication_form=FormulaireConnexion),
+         name="login"),
     path("compte/", include("django.contrib.auth.urls")),
+    # Les fichiers déposés ne sont JAMAIS servis directement : ils passent
+    # par une vue qui vérifie la connexion et le cloisonnement client.
+    path("media/<path:chemin>", views.media_protege, name="media_protege"),
+    path("sante/", views.sante, name="sante"),
     path("", include("core.urls")),
 ]
-
-# En développement, Django sert lui-même les images uploadées.
-# En production, c'est le serveur web (Nginx) qui s'en charge.
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)

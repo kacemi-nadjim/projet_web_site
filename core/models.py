@@ -9,12 +9,25 @@ Django génère le SQL automatiquement via les migrations (ORM).
   -> une photo de rue peut contenir un visage ET une plaque ET une voiture
 - Ajout d'un hash (empreinte) pour détecter les doublons à l'upload
 - L'Export enregistre désormais le détail de ce qui a été téléchargé
+
+ÉVOLUTIONS v1.1 (rattrapage) :
+- Index composites alignés sur les requêtes réelles (galerie, export,
+  dashboard) -> mesures avant/après dans docs/MESURES_PERFORMANCE.md
+- Contrainte d'unicité PARTIELLE : l'anti-doublon est garanti par la base
+  elle-même, pas seulement par le code (résiste aux dépôts simultanés)
+- Contrainte CHECK sur le score qualité (toujours entre 0 et 100)
+- Miniature WebP générée à l'upload (éco-conception de la galerie)
+- Journal d'accès (connexions, échecs, exports, téléchargements)
 """
 
 import hashlib
+import logging
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Q
+
+logger = logging.getLogger("pixbank.models")
 
 
 class Client(models.Model):
@@ -97,6 +110,10 @@ class Image(models.Model):
         REFUSEE = "REFUSEE", "Refusée"
 
     fichier = models.ImageField(upload_to="images/%Y/%m/")
+    # Version allégée (WebP, 480 px max) affichée dans la galerie.
+    # Les métadonnées EXIF (dont la position GPS) n'y sont pas recopiées.
+    miniature = models.ImageField(upload_to="miniatures/%Y/%m/",
+                                  null=True, blank=True, editable=False)
 
     # MULTI-CATÉGORIES : une image peut porter plusieurs labels.
     # ManyToManyField crée automatiquement une table de liaison
@@ -127,14 +144,49 @@ class Image(models.Model):
 
     class Meta:
         ordering = ["-date_upload"]
+        indexes = [
+            # Index PARTIELS (WHERE NOT is_deleted) : Django traduit le filtre
+            # is_deleted=False par « NOT is_deleted », condition qu'un index
+            # composite classique ne sait pas exploiter. Un index partiel ne
+            # contient que les images actives : il correspond exactement aux
+            # requêtes de l'application et il est plus petit (moins de disque).
+            #
+            # Galerie : WHERE client=? AND NOT is_deleted ORDER BY date DESC
+            # -> l'index fournit directement l'ordre, sans tri en mémoire.
+            models.Index(fields=["client", "-date_upload"],
+                         condition=Q(is_deleted=False),
+                         name="image_galerie_idx"),
+            # Export et dashboard : WHERE client=? AND NOT is_deleted
+            # AND statut=?
+            models.Index(fields=["client", "statut"],
+                         condition=Q(is_deleted=False),
+                         name="image_client_statut_idx"),
+        ]
+        constraints = [
+            # Anti-doublon garanti par la base : une même empreinte ne peut
+            # exister qu'une fois par client parmi les images non supprimées.
+            # (index unique PARTIEL : les images supprimées ne comptent pas)
+            models.UniqueConstraint(
+                fields=["client", "hash_fichier"],
+                condition=Q(is_deleted=False) & ~Q(hash_fichier=""),
+                name="image_unique_par_client",
+            ),
+        ]
 
     def save(self, *args, **kwargs):
         if self.fichier and not self.largeur:
             try:
                 self.largeur = self.fichier.width
                 self.hauteur = self.fichier.height
-            except Exception:
-                pass
+            except (OSError, ValueError):
+                logger.warning("Dimensions illisibles pour %s", self.fichier.name)
+        if self.fichier and not self.hash_fichier:
+            self.hash_fichier = calculer_hash(self.fichier)
+        if self.fichier and not self.miniature:
+            from .miniatures import creer_miniature
+            contenu = creer_miniature(self.fichier)
+            if contenu is not None:
+                self.miniature.save(contenu.name, contenu, save=False)
         super().save(*args, **kwargs)
 
     def labels(self):
@@ -142,7 +194,10 @@ class Image(models.Model):
         return ", ".join(c.nom for c in self.categories.all())
 
     def contient_donnee_perso(self):
-        return self.categories.filter(donnee_personnelle=True).exists()
+        # On parcourt categories.all() plutôt que .filter() : si les
+        # catégories ont été préchargées (prefetch_related), aucune requête
+        # SQL supplémentaire n'est faite (corrige un problème N+1 de l'export).
+        return any(c.donnee_personnelle for c in self.categories.all())
 
     def __str__(self):
         return f"{self.fichier.name}"
@@ -172,6 +227,8 @@ class Export(models.Model):
 
     class Meta:
         ordering = ["-date"]
+        indexes = [models.Index(fields=["client", "-date"],
+                                name="export_client_date_idx")]
 
     def __str__(self):
         return f"{self.user} — {self.nb_images} images le {self.date:%d/%m/%Y}"
@@ -271,6 +328,15 @@ class Batch(models.Model):
         verbose_name = "Lot de travail"
         verbose_name_plural = "Lots de travail"
         ordering = ["-date_creation"]
+        constraints = [
+            # Le score qualité est un pourcentage : la base refuse toute
+            # valeur hors de [0 ; 100], même en cas de bug applicatif.
+            models.CheckConstraint(
+                condition=Q(score_qualite__isnull=True)
+                | Q(score_qualite__gte=0, score_qualite__lte=100),
+                name="batch_score_entre_0_et_100",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.nom} ({self.get_statut_display()})"
@@ -297,3 +363,66 @@ class MessageContact(models.Model):
 
     def __str__(self):
         return f"{self.nom} — {self.email} ({self.date_envoi:%d/%m/%Y})"
+
+
+class JournalAcces(models.Model):
+    """
+    Journal de sécurité : qui s'est connecté, qui a échoué, qui a exporté
+    ou téléchargé quoi. Sert à :
+      - détecter les attaques (échecs répétés -> blocage temporaire) ;
+      - enquêter après un incident (qui a accédé à quoi, quand) ;
+      - prouver la traçabilité exigée par le RGPD.
+    Conservation limitée (voir la commande purger_journal).
+    """
+
+    class Evenement(models.TextChoices):
+        CONNEXION_OK = "CONNEXION_OK", "Connexion réussie"
+        CONNEXION_ECHEC = "CONNEXION_ECHEC", "Échec de connexion"
+        CONNEXION_BLOQUEE = "BLOQUEE", "Connexion bloquée (trop d'échecs)"
+        DECONNEXION = "DECONNEXION", "Déconnexion"
+        EXPORT = "EXPORT", "Export de dataset"
+        TELECHARGEMENT = "TELECHARGEMENT", "Téléchargement de fichier"
+        ACCES_REFUSE = "ACCES_REFUSE", "Accès refusé (hors périmètre)"
+
+    date = models.DateTimeField(auto_now_add=True)
+    evenement = models.CharField(max_length=20, choices=Evenement.choices)
+    utilisateur = models.ForeignKey(User, on_delete=models.SET_NULL,
+                                    null=True, blank=True,
+                                    related_name="journal")
+    identifiant = models.CharField(
+        max_length=150, blank=True,
+        help_text="Identifiant saisi (même s'il ne correspond à aucun compte).")
+    ip = models.GenericIPAddressField(null=True, blank=True)
+    detail = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        verbose_name = "Entrée du journal d'accès"
+        verbose_name_plural = "Journal d'accès"
+        ordering = ["-date"]
+        indexes = [
+            # Requête de l'anti force brute : échecs récents d'un identifiant.
+            models.Index(fields=["identifiant", "evenement", "date"],
+                         name="journal_tentatives_idx"),
+            models.Index(fields=["date"], name="journal_date_idx"),
+        ]
+
+    def __str__(self):
+        qui = self.utilisateur or self.identifiant or "anonyme"
+        return f"{self.date:%d/%m/%Y %H:%M} — {self.get_evenement_display()} — {qui}"
+
+    @classmethod
+    def enregistrer(cls, evenement, request=None, utilisateur=None,
+                    identifiant="", detail=""):
+        """Raccourci utilisé par les vues et les signaux."""
+        from .securite import ip_client
+
+        if utilisateur is None and request is not None and \
+                getattr(request, "user", None) is not None and \
+                request.user.is_authenticated:
+            utilisateur = request.user
+        if not identifiant and utilisateur is not None:
+            identifiant = utilisateur.get_username()
+        return cls.objects.create(
+            evenement=evenement, utilisateur=utilisateur,
+            identifiant=identifiant[:150], ip=ip_client(request),
+            detail=detail[:255])

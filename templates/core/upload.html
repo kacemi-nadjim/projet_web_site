@@ -2,7 +2,7 @@
 {% block title %}Déposer — PixBank{% endblock %}
 {% block content %}
 <h1>Déposer des images</h1>
-<p class="help">Sélectionnez une ou plusieurs images. Elles seront visibles après validation par un administrateur. Les doublons sont automatiquement ignorés.</p>
+<p class="help">Sélectionnez une ou plusieurs images (JPEG, PNG, WebP ou BMP, 15 Mo maximum chacune). Elles seront visibles après validation par un administrateur. Les doublons sont automatiquement ignorés.</p>
 
 <form method="post" enctype="multipart/form-data" class="form-card">
     {% csrf_token %}
@@ -10,6 +10,7 @@
     <div class="field">
         {{ form.fichiers.label_tag }}
         {{ form.fichiers }}
+        {% for erreur in form.fichiers.errors %}<p class="flash flash-error" id="id_fichiers_error">{{ erreur }}</p>{% endfor %}
     </div>
     <div class="field">
         <span class="field-label">{{ form.categories.label }}</span>

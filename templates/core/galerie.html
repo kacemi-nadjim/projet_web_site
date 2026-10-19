@@ -34,7 +34,9 @@
     {% for image in images %}
     <article class="card">
         <div class="card-img">
-            <img src="{{ image.fichier.url }}" alt="Image : {{ image.labels }}" loading="lazy">
+            {# v1.1 : la miniature WebP (quelques Ko) remplace l'original (plusieurs Mo) #}
+            <img src="{% if image.miniature %}{{ image.miniature.url }}{% else %}{{ image.fichier.url }}{% endif %}"
+                 alt="Image : {{ image.labels }}" loading="lazy" decoding="async" width="480" height="360">
             <span class="badge badge-{{ image.statut }}">{{ image.get_statut_display }}</span>
         </div>
         <div class="card-body">
@@ -55,4 +57,16 @@
     <p class="empty">Aucune image. <a href="{% url 'upload' %}">Déposez la première</a>.</p>
     {% endfor %}
 </div>
+
+{% if page.has_other_pages %}
+<nav class="pagination" aria-label="Pagination de la galerie">
+    {% if page.has_previous %}
+    <a href="?page={{ page.previous_page_number }}{% if filtre_categorie %}&amp;categorie={{ filtre_categorie }}{% endif %}{% if filtre_statut %}&amp;statut={{ filtre_statut }}{% endif %}" rel="prev">← Précédente</a>
+    {% endif %}
+    <span class="page-courante" aria-current="page">Page {{ page.number }} / {{ page.paginator.num_pages }}</span>
+    {% if page.has_next %}
+    <a href="?page={{ page.next_page_number }}{% if filtre_categorie %}&amp;categorie={{ filtre_categorie }}{% endif %}{% if filtre_statut %}&amp;statut={{ filtre_statut }}{% endif %}" rel="next">Suivante →</a>
+    {% endif %}
+</nav>
+{% endif %}
 {% endblock %}

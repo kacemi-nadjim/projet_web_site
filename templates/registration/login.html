@@ -4,7 +4,8 @@
 <h1>Connexion</h1>
 <form method="post" class="form-card">
     {% csrf_token %}
-    {% if form.errors %}<p class="flash flash-error">Identifiants incorrects.</p>{% endif %}
+    {# Message volontairement générique : on ne révèle pas si l'identifiant existe. #}
+    {% for erreur in form.non_field_errors %}<p class="flash flash-error" role="alert">{{ erreur }}</p>{% endfor %}
     <div class="field">{{ form.username.label_tag }}{{ form.username }}</div>
     <div class="field">{{ form.password.label_tag }}{{ form.password }}</div>
     <button type="submit" class="btn-primary">Se connecter</button>

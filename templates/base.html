@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}PixBank — Banque d'images d'entraînement{% endblock %}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <meta name="description" content="PixBank — banque d'images d'entraînement multi-clients pour la computer vision.">
+    <link rel="preload" href="{% static 'fonts/sora-latin-400-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
@@ -42,7 +42,8 @@
         <p>PixBank — Projet annuel Bachelor Data &amp; BI ·
            <a href="{% url 'mentions' %}">Mentions légales</a> ·
            <a href="{% url 'confidentialite' %}">Confidentialité</a> ·
-           <a href="{% url 'cgu' %}">CGU</a></p>
+           <a href="{% url 'cgu' %}">CGU</a> ·
+           <span class="version">v{{ PIXBANK_VERSION }}</span></p>
     </footer>
 
     <!-- Bandeau cookies (exigence RGPD). Masqué une fois le choix fait,
@@ -52,15 +53,6 @@
            <a href="{% url 'confidentialite' %}">En savoir plus</a>.</p>
         <button type="button" id="cookie-ok" class="btn-primary">J'ai compris</button>
     </div>
-    <script>
-        (function () {
-            var b = document.getElementById('cookie-banner');
-            if (document.cookie.indexOf('cookie_ok=1') !== -1) { b.style.display = 'none'; return; }
-            document.getElementById('cookie-ok').addEventListener('click', function () {
-                document.cookie = 'cookie_ok=1; max-age=31536000; path=/; SameSite=Lax';
-                b.style.display = 'none';
-            });
-        })();
-    </script>
+    <script src="{% static 'js/cookies.js' %}" defer></script>
 </body>
 </html>

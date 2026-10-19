@@ -10,7 +10,7 @@
     <div class="field">{{ form.nom.label_tag }}{{ form.nom }}{{ form.nom.errors }}</div>
     <div class="field">{{ form.email.label_tag }}{{ form.email }}{{ form.email.errors }}</div>
     <div class="field">{{ form.message.label_tag }}{{ form.message }}{{ form.message.errors }}</div>
-    <div style="position:absolute;left:-5000px;" aria-hidden="true">{{ form.site_web }}</div>
+    <div class="champ-piege" aria-hidden="true">{{ form.site_web }}</div>
     <div class="field field-inline">{{ form.consentement }} {{ form.consentement.label_tag }}{{ form.consentement.errors }}</div>
     <button type="submit" class="btn-primary">Envoyer</button>
 </form>
