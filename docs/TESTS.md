@@ -17,7 +17,7 @@ Toute anomalie corrigée reçoit un test qui échouerait si elle revenait
 ## 2. Lancer les tests
 
 ```bash
-python manage.py test                       # 125 tests, environ 4 secondes
+python manage.py test                       # 125 tests, environ 3 secondes
 coverage run manage.py test && coverage report   # taux de couverture
 DATABASE_URL=postgres://… python manage.py test  # même suite sur PostgreSQL
 ```
@@ -44,8 +44,8 @@ neutralisés.
 
 ### Exécution
 ```
-Ran 125 tests in 3.5s — OK                      (SQLite)
-Ran 125 tests in 5.3s — OK (skipped=3)          (PostgreSQL 16)
+Ran 125 tests in 2.918s — OK                    (SQLite)
+Ran 125 tests in 4.746s — OK (skipped=3)        (PostgreSQL 16)
 ```
 Les 3 tests ignorés sous PostgreSQL lisent un plan d'exécution au format
 propre à SQLite. Sous PostgreSQL, le même contrôle est fait par

@@ -54,7 +54,7 @@ Limit -> Sort (Sort Key: date_upload DESC)
 ordre, sans rien lire de plus.
 ```
 Limit -> Index Scan using image_galerie_idx on core_image
-         Index Cond: (client_id = 1)            Execution Time: 0.07 ms
+         Index Cond: (client_id = 1)            Execution Time: 0.12 ms
 ```
 
 ### Choix techniques et justification
