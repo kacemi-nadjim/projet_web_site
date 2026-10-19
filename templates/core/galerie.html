@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Galerie — PixBank{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>Galerie <span class="count">{{ total }} image{{ total|pluralize }}</span></h1>
+    {% if user.is_data_scientist %}
+    <a class="btn-primary" href="{% url 'exporter' %}{% if filtre_categorie %}?categorie={{ filtre_categorie }}{% endif %}">
+        ↓ Exporter le dataset (ZIP + CSV)
+    </a>
+    {% endif %}
+</div>
+
+<form method="get" class="filters">
+    <label>Catégorie
+        <select name="categorie">
+            <option value="">Toutes</option>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if filtre_categorie == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.nom }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Statut
+        <select name="statut">
+            <option value="">Tous</option>
+            <option value="ATTENTE" {% if filtre_statut == "ATTENTE" %}selected{% endif %}>En attente</option>
+            <option value="VALIDEE" {% if filtre_statut == "VALIDEE" %}selected{% endif %}>Validée</option>
+            <option value="REFUSEE" {% if filtre_statut == "REFUSEE" %}selected{% endif %}>Refusée</option>
+        </select>
+    </label>
+    <button type="submit" class="btn-secondary">Filtrer</button>
+</form>
+
+<div class="grid">
+    {% for image in images %}
+    <article class="card">
+        <div class="card-img">
+            <img src="{{ image.fichier.url }}" alt="Image : {{ image.labels }}" loading="lazy">
+            <span class="badge badge-{{ image.statut }}">{{ image.get_statut_display }}</span>
+        </div>
+        <div class="card-body">
+            <p class="card-cat">
+                {% for cat in image.categories.all %}
+                    <span class="tag {% if cat.donnee_personnelle %}tag-dp{% endif %}">{{ cat.nom }}</span>
+                {% endfor %}
+            </p>
+            <p class="card-meta">{{ image.largeur }}×{{ image.hauteur }} px · {{ image.date_upload|date:"d/m/Y" }} · {{ image.uploaded_by.username }}</p>
+            {% if image.uploaded_by == user or user.is_admin_metier %}
+            <form method="post" action="{% url 'supprimer_image' image.id %}" onsubmit="return confirm('Supprimer cette image ?');">
+                {% csrf_token %}<button type="submit" class="btn-danger">Supprimer</button>
+            </form>
+            {% endif %}
+        </div>
+    </article>
+    {% empty %}
+    <p class="empty">Aucune image. <a href="{% url 'upload' %}">Déposez la première</a>.</p>
+    {% endfor %}
+</div>
+{% endblock %}

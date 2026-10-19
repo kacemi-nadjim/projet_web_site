@@ -1,0 +1,4 @@
+Django==5.2.15
+Pillow>=10.0
+# Pour PostgreSQL (avant le rendu final) :
+# psycopg2-binary>=2.9

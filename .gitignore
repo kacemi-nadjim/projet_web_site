@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Django
+db.sqlite3
+media/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Journaux et sauvegardes
+logs/
+backups/
+htmlcov/
+.coverage
+staticfiles/

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — PixBank{% endblock %}
+{% block content %}
+<h1>Tableau de bord <span class="count">{{ user.client.nom }}</span></h1>
+<p class="help">Vue d'ensemble de la banque d'images de votre organisation.</p>
+
+<div class="kpi-grid">
+    <div class="kpi">
+        <p class="kpi-val">{{ stats.total }}</p>
+        <p class="kpi-label">Images au total</p>
+    </div>
+    <div class="kpi">
+        <p class="kpi-val">{{ taux_validation }}%</p>
+        <p class="kpi-label">Taux de validation</p>
+    </div>
+    <div class="kpi">
+        <p class="kpi-val">{{ nb_donnees_perso }}</p>
+        <p class="kpi-label">Images à données personnelles</p>
+    </div>
+    <div class="kpi">
+        <p class="kpi-val">{{ nb_contributeurs }}</p>
+        <p class="kpi-label">Contributeurs actifs</p>
+    </div>
+</div>
+
+<section class="panel">
+    <h2>Répartition par catégorie</h2>
+    <div class="bars">
+        {% for cat in par_categorie %}
+        <div class="bar-row">
+            <span class="bar-label">{{ cat.nom }}{% if cat.donnee_personnelle %} <span class="dp-dot" title="Donnée personnelle"></span>{% endif %}</span>
+            <span class="bar-track">
+                <span class="bar-fill" style="width: {% widthratio cat.n max_cat 100 %}%;"></span>
+            </span>
+            <span class="bar-val">{{ cat.n }}</span>
+        </div>
+        {% empty %}
+        <p class="empty">Pas encore de données.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="panel">
+    <h2>État des dépôts</h2>
+    <div class="statut-grid">
+        <div class="statut-box statut-validee"><strong>{{ stats.validees }}</strong> validées</div>
+        <div class="statut-box statut-attente"><strong>{{ stats.attente }}</strong> en attente</div>
+        <div class="statut-box statut-refusee"><strong>{{ stats.refusees }}</strong> refusées</div>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Derniers exports</h2>
+    {% if exports %}
+    <table class="data-table">
+        <thead><tr><th>Date</th><th>Data scientist</th><th>Images</th><th>Filtre</th></tr></thead>
+        <tbody>
+        {% for e in exports %}
+            <tr><td>{{ e.date|date:"d/m/Y H:i" }}</td><td>{{ e.user.username }}</td><td>{{ e.nb_images }}</td><td>{{ e.filtre_applique }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty">Aucun export pour le moment.</p>
+    {% endif %}
+</section>
+{% endblock %}

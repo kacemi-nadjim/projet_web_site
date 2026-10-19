@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Connexion — PixBank{% endblock %}
+{% block content %}
+<h1>Connexion</h1>
+<form method="post" class="form-card">
+    {% csrf_token %}
+    {% if form.errors %}<p class="flash flash-error">Identifiants incorrects.</p>{% endif %}
+    <div class="field">{{ form.username.label_tag }}{{ form.username }}</div>
+    <div class="field">{{ form.password.label_tag }}{{ form.password }}</div>
+    <button type="submit" class="btn-primary">Se connecter</button>
+    <p class="help" style="margin-top:1rem;">Pas encore de compte ? <a href="{% url 'inscription' %}">Devenir contributeur</a></p>
+</form>
+{% endblock %}

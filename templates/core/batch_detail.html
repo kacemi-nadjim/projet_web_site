@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{{ batch.nom }} — PixBank{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>{{ batch.nom }}</h1>
+    <span class="badge-statut badge-{{ batch.statut }}">{{ batch.get_statut_display }}</span>
+</div>
+<div class="batch-meta">
+    <span><strong>{{ batch.nb_images }}</strong> images</span>
+    <span>Créé par {{ batch.cree_par.username }}</span>
+    <span>Assigné à {{ batch.assigne_a.username|default:"personne" }}</span>
+    {% if batch.score_qualite is not None %}<span>Score : <strong>{{ batch.score_qualite }}%</strong></span>{% endif %}
+</div>
+{% if batch.description %}<p class="help">{{ batch.description }}</p>{% endif %}
+
+{% if user == batch.assigne_a %}
+<section class="panel">
+    <h2>Votre travail</h2>
+    <p>1. Téléchargez les images à labéliser :</p>
+    <a class="btn-secondary" href="{% url 'batch_telecharger_images' batch.id %}">↓ Télécharger les images</a>
+    <p style="margin-top:1.2rem;">2. Labélisez-les sur LabelMe (pour une image floue, cochez le flag <code>flou</code> dans LabelMe), puis redéposez votre dossier <code>labels/</code> :</p>
+    <form method="post" enctype="multipart/form-data" style="margin-top:.6rem;">
+        {% csrf_token %}
+        <div class="field">{{ form.zip_travail }}</div>
+        <button type="submit" class="btn-primary">Soumettre mon travail</button>
+    </form>
+</section>
+{% endif %}
+
+{% if batch.rapport %}
+<section class="panel">
+    <h2>Rapport de contrôle qualité</h2>
+    {% if user.is_data_scientist and batch.zip_travail %}
+    <p style="margin-bottom:1rem;">
+        <a class="btn-secondary" href="{% url 'batch_telecharger_travail' batch.id %}">↓ Télécharger le travail labélisé du contributeur</a>
+    </p>
+    {% endif %}
+    <div class="kpi-grid" style="margin:1rem 0;">
+        <div class="kpi"><p class="kpi-val">{{ batch.score_qualite }}%</p><p class="kpi-label">Score global (IoU)</p></div>
+        <div class="kpi"><p class="kpi-val">{{ batch.rapport.nb_correctes }}</p><p class="kpi-label">Annotations correctes</p></div>
+        <div class="kpi"><p class="kpi-val">{{ batch.rapport.nb_manquantes }}</p><p class="kpi-label">Labels manquants</p></div>
+        <div class="kpi"><p class="kpi-val">{{ batch.rapport.nb_floues }}</p><p class="kpi-label">Signalées floues</p></div>
+    </div>
+    <table class="data-table">
+        <thead><tr><th>Image</th><th>Statut</th><th>IoU</th><th>Détail</th></tr></thead>
+        <tbody>
+        {% for l in batch.rapport.lignes %}
+            <tr>
+                <td>{{ l.image }}</td>
+                <td><span class="qstatut q-{{ l.statut }}">{{ l.statut }}</span></td>
+                <td>{% if l.iou is not None %}{{ l.iou }}%{% else %}—{% endif %}</td>
+                <td class="qdetail">{{ l.details }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p class="hint" style="margin-top:.8rem;">Un objet est conforme si son IoU ≥ {{ batch.rapport.seuil_iou }}%. Les images signalées floues sont exclues du score global.</p>
+</section>
+{% elif user.is_data_scientist %}
+<section class="panel">
+    <h2>Suivi (manager)</h2>
+    {% if batch.zip_travail %}
+        <p class="help">Le contributeur a soumis son travail.</p>
+        <a class="btn-secondary" href="{% url 'batch_telecharger_travail' batch.id %}">↓ Télécharger le travail labélisé du contributeur</a>
+    {% else %}
+        <p class="help">En attente de la soumission du contributeur.</p>
+    {% endif %}
+</section>
+{% endif %}
+
+<p style="margin-top:1.5rem;"><a href="{% url 'batches' %}">← Retour aux lots</a></p>
+{% endblock %}

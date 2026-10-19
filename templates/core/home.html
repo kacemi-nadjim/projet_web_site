@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+    <p class="eyebrow">DONNÉES D'ENTRAÎNEMENT · COMPUTER VISION</p>
+    <h1>Vos images labélisées,<br>prêtes pour l'entraînement.</h1>
+    <p class="hero-sub">
+        PixBank centralise les images d'entraînement de vos modèles de deep
+        learning : dépôt par vos équipes, validation qualité, récupération
+        par vos data scientists. Chaque client dispose d'un espace cloisonné
+        et conforme RGPD.
+    </p>
+    {% if user.is_authenticated %}
+        <a class="btn-primary" href="{% url 'galerie' %}">Accéder à la galerie</a>
+    {% else %}
+        <a class="btn-primary" href="{% url 'login' %}">Se connecter</a>
+        <a class="btn-secondary" href="{% url 'inscription' %}" style="margin-left:.5rem;">Devenir contributeur</a>
+    {% endif %}
+</section>
+
+<section class="steps">
+    <div class="step">
+        <p class="step-tag">CONTRIBUTEUR</p>
+        <h2>Déposez</h2>
+        <p>Une image, sa catégorie (visage, plaque, écran, animal…) et la
+           certification du consentement si la donnée est personnelle.</p>
+    </div>
+    <div class="step">
+        <p class="step-tag">ADMINISTRATEUR</p>
+        <h2>Validez</h2>
+        <p>Chaque dépôt passe un contrôle qualité avant d'intégrer la
+           banque d'images : netteté, catégorie correcte, conformité.</p>
+    </div>
+    <div class="step">
+        <p class="step-tag">DATA SCIENTIST</p>
+        <h2>Récupérez</h2>
+        <p>Filtrez par catégorie, sélectionnez, téléchargez : un dataset
+           propre et traçable pour entraîner vos modèles.</p>
+    </div>
+</section>
+{% endblock %}
