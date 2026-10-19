@@ -193,4 +193,9 @@ class FormulaireConnexion(LimiteTentativesMixin, AuthenticationForm):
 
 
 class FormulaireConnexionAdmin(LimiteTentativesMixin, AdminAuthenticationForm):
-    """Même protection pour la connexion au back-office."""
+    """Même protection pour la connexion au back-office (en gardant les
+    messages propres au back-office, ex. « compte non autorisé »)."""
+    error_messages = {
+        **AdminAuthenticationForm.error_messages,
+        "bloque": LimiteTentativesMixin.error_messages["bloque"],
+    }
