@@ -50,6 +50,15 @@ ALLOWED_HOSTS = os.environ.get(
 ADMINS = [tuple(a.split(":", 1)) for a in
           os.environ.get("DJANGO_ADMINS", "").split(",") if ":" in a]
 
+# Envoi des alertes d'erreur par e-mail (serveur SMTP défini dans .env).
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True") == "True"
+SERVER_EMAIL = os.environ.get("SERVER_EMAIL", "pixbank@localhost")
+EMAIL_SUBJECT_PREFIX = "[PixBank] "
+
 # Durcissement automatique en production (DEBUG désactivé).
 if not DEBUG:
     SECURE_SSL_REDIRECT = True          # force le HTTPS

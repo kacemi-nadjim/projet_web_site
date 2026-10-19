@@ -5,106 +5,111 @@
   "requetes": {
     "Galerie — page 1 (24 images)": {
       "v1.0": {
-        "mediane_ms": 14.724,
-        "p95_ms": 15.964
+        "mediane_ms": 14.878,
+        "p95_ms": 19.213
       },
       "v1.1": {
-        "mediane_ms": 0.959,
-        "p95_ms": 1.256
+        "mediane_ms": 1.451,
+        "p95_ms": 1.586
       },
-      "facteur": 15.4
+      "facteur": 10.3
     },
     "Galerie — page 50": {
       "v1.0": {
-        "mediane_ms": 11.929,
-        "p95_ms": 12.641
+        "mediane_ms": 15.627,
+        "p95_ms": 19.874
       },
       "v1.1": {
-        "mediane_ms": 1.443,
-        "p95_ms": 1.858
+        "mediane_ms": 1.908,
+        "p95_ms": 2.741
       },
-      "facteur": 8.3
+      "facteur": 8.2
     },
     "Galerie — nombre total": {
       "v1.0": {
-        "mediane_ms": 4.707,
-        "p95_ms": 4.828
+        "mediane_ms": 5.279,
+        "p95_ms": 5.653
       },
       "v1.1": {
-        "mediane_ms": 5.835,
-        "p95_ms": 7.232
+        "mediane_ms": 2.457,
+        "p95_ms": 2.726
       },
-      "facteur": 0.8
+      "facteur": 2.1
     },
     "Export — sélection des images validées *": {
       "v1.0": {
-        "mediane_ms": 12.966,
-        "p95_ms": 13.304
+        "mediane_ms": 12.259,
+        "p95_ms": 16.526
       },
       "v1.1": {
-        "mediane_ms": 7.119,
-        "p95_ms": 7.447
+        "mediane_ms": 8.641,
+        "p95_ms": 11.092
       },
-      "facteur": 1.8
+      "facteur": 1.4
     },
     "Dashboard — calcul complet des indicateurs *": {
       "v1.0": {
-        "mediane_ms": 82.908,
-        "p95_ms": 100.513
+        "mediane_ms": 83.321,
+        "p95_ms": 89.928
       },
       "v1.1": {
-        "mediane_ms": 55.947,
-        "p95_ms": 67.855
+        "mediane_ms": 59.761,
+        "p95_ms": 83.055
       },
-      "facteur": 1.5
+      "facteur": 1.4
     },
     "Dépôt — détection de doublon (SHA-256)": {
       "v1.0": {
-        "mediane_ms": 0.64,
-        "p95_ms": 1.116
+        "mediane_ms": 0.587,
+        "p95_ms": 0.802
       },
       "v1.1": {
-        "mediane_ms": 0.597,
-        "p95_ms": 1.405
+        "mediane_ms": 0.828,
+        "p95_ms": 1.247
       },
-      "facteur": 1.1
+      "facteur": 0.7
     },
     "Connexion — compteur anti force brute": {
       "v1.0": {
-        "mediane_ms": 7.036,
-        "p95_ms": 7.217
+        "mediane_ms": 6.949,
+        "p95_ms": 7.443
       },
       "v1.1": {
-        "mediane_ms": 0.812,
-        "p95_ms": 1.165
+        "mediane_ms": 1.012,
+        "p95_ms": 1.657
       },
-      "facteur": 8.7
+      "facteur": 6.9
     }
   },
   "plans": {
     "galerie_v1.0": [
-      "Limit  (cost=4315.36..4315.42 rows=24 width=188) (actual time=23.876..23.883 rows=24 loops=1)",
-      "  ->  Sort  (cost=4315.36..4382.35 rows=26799 width=188) (actual time=23.875..23.878 rows=24 loops=1)",
+      "Limit  (cost=4313.68..4313.74 rows=24 width=188) (actual time=23.805..23.812 rows=24 loops=1)",
+      "  ->  Sort  (cost=4313.68..4380.53 rows=26739 width=188) (actual time=23.803..23.807 rows=24 loops=1)",
       "        Sort Key: date_upload DESC",
       "        Sort Method: top-N heapsort  Memory: 31kB",
-      "        ->  Seq Scan on core_image  (cost=0.00..3567.00 rows=26799 width=188) (actual time=5.638..16.003 rows=26743 loops=1)",
+      "        ->  Seq Scan on core_image  (cost=0.00..3567.00 rows=26739 width=188) (actual time=1.328..12.146 rows=26743 loops=1)",
       "              Filter: ((NOT is_deleted) AND (client_id = 1))",
       "              Rows Removed by Filter: 23257",
-      "Planning Time: 0.171 ms",
-      "Execution Time: 23.901 ms"
+      "Planning Time: 0.293 ms",
+      "Execution Time: 23.839 ms"
     ],
     "galerie_v1.1": [
-      "Limit  (cost=0.29..10.26 rows=24 width=188) (actual time=0.023..0.058 rows=24 loops=1)",
-      "  ->  Index Scan using image_galerie_idx on core_image  (cost=0.29..11147.46 rows=26835 width=188) (actual time=0.022..0.055 rows=24 loops=1)",
+      "Limit  (cost=0.29..10.25 rows=24 width=188) (actual time=0.025..0.093 rows=24 loops=1)",
+      "  ->  Index Scan using image_galerie_idx on core_image  (cost=0.29..11120.67 rows=26788 width=188) (actual time=0.023..0.057 rows=24 loops=1)",
       "        Index Cond: (client_id = 1)",
-      "Planning Time: 0.256 ms",
-      "Execution Time: 0.072 ms"
+      "Planning Time: 0.287 ms",
+      "Execution Time: 0.120 ms"
     ]
   },
-  "taille_index_octets": {
+  "taille_index_octets_v1.0": {
     "core_image_pkey": 2252800,
-    "core_image_hash_fichier_55562191": 9682944,
-    "core_image_hash_fichier_55562191_like": 9682944,
+    "core_image_client_id_539c3803": 671744,
+    "core_image_uploaded_by_id_851876f6": 835584,
+    "v10_hash_idx": 4800512,
+    "v10_hash_like_idx": 4800512
+  },
+  "taille_index_octets_v1.1": {
+    "core_image_pkey": 2252800,
     "core_image_client_id_539c3803": 671744,
     "core_image_uploaded_by_id_851876f6": 835584,
     "image_galerie_idx": 1433600,

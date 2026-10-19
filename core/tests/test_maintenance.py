@@ -14,7 +14,7 @@ from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.db import IntegrityError, transaction
-from django.test import TransactionTestCase
+from django.test import SimpleTestCase, TransactionTestCase
 from django.utils import timezone
 
 from core.models import Batch, Category, Client, Image, JournalAcces, User
@@ -142,3 +142,61 @@ class ContraintesBaseTest(DonneesDeBase):
         from django.db.models import ProtectedError
         with self.assertRaises(ProtectedError):
             self.acme.delete()
+
+
+class PurgesEtNettoyageTest(DonneesDeBase):
+
+    def test_effacement_definitif_apres_30_jours(self):
+        from pathlib import Path
+        ancienne = creer_image(self.wassa, self.contrib, couleur="#111111")
+        recente = creer_image(self.wassa, self.contrib, couleur="#eeeeee")
+        active = creer_image(self.wassa, self.contrib, couleur="#777777")
+        chemins = [Path(ancienne.fichier.path), Path(ancienne.miniature.path)]
+        Image.objects.filter(pk=ancienne.pk).update(
+            is_deleted=True, deleted_at=timezone.now() - timedelta(days=31))
+        Image.objects.filter(pk=recente.pk).update(
+            is_deleted=True, deleted_at=timezone.now() - timedelta(days=2))
+        sortie = io.StringIO()
+        call_command("purger_images_supprimees", stdout=sortie)
+        self.assertFalse(Image.objects.filter(pk=ancienne.pk).exists())
+        self.assertTrue(all(not p.exists() for p in chemins))      # fichiers effacés
+        self.assertTrue(Image.objects.filter(pk=recente.pk).exists())  # encore récupérable
+        self.assertTrue(Image.objects.filter(pk=active.pk).exists())
+        self.assertIn("1 image(s) effacée(s)", sortie.getvalue())
+
+    def test_fichiers_orphelins(self):
+        from pathlib import Path
+        img = creer_image(self.wassa, self.contrib)
+        orphelin = Path(settings.MEDIA_ROOT) / "images" / "reste_de_test.jpg"
+        orphelin.parent.mkdir(parents=True, exist_ok=True)
+        orphelin.write_bytes(b"x" * 10)
+        sortie = io.StringIO()
+        call_command("nettoyer_medias", stdout=sortie)
+        self.assertIn("reste_de_test.jpg", sortie.getvalue())
+        self.assertTrue(orphelin.exists())                 # simple liste par défaut
+        call_command("nettoyer_medias", supprimer=True, stdout=io.StringIO())
+        self.assertFalse(orphelin.exists())
+        self.assertTrue(Path(img.fichier.path).exists())   # les fichiers utiles restent
+
+
+class FichierEnvTest(SimpleTestCase):
+    """Le fichier .env du serveur est lu sans écraser l'environnement existant."""
+
+    def test_lecture_du_fichier_env(self):
+        import os
+
+        from config.env import charger_env
+        with tempfile.NamedTemporaryFile("w", suffix=".env", delete=False) as f:
+            f.write("# commentaire\nPIXBANK_TEST_A=valeur\nPIXBANK_TEST_B='entre guillemets'\n"
+                    "ligne invalide\nPIXBANK_TEST_C=nouvelle\n")
+        os.environ["PIXBANK_TEST_C"] = "existante"
+        try:
+            self.assertTrue(charger_env(f.name))
+            self.assertEqual(os.environ["PIXBANK_TEST_A"], "valeur")
+            self.assertEqual(os.environ["PIXBANK_TEST_B"], "entre guillemets")
+            self.assertEqual(os.environ["PIXBANK_TEST_C"], "existante")
+            self.assertFalse(charger_env("/chemin/inexistant/.env"))
+        finally:
+            for k in ("PIXBANK_TEST_A", "PIXBANK_TEST_B", "PIXBANK_TEST_C"):
+                os.environ.pop(k, None)
+            Path(f.name).unlink()

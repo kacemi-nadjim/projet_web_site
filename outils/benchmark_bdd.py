@@ -129,6 +129,8 @@ def index_v11():
 
 
 def basculer_index(actifs):
+    """actifs=False : situation de la v1.0 (index v1.1 retirés, index simple
+    sur l'empreinte remis — sous PostgreSQL, Django en créait deux)."""
     from django.db import connection
     with connection.schema_editor() as editeur:
         for modele, sorte, objet in index_v11():
@@ -136,6 +138,15 @@ def basculer_index(actifs):
                 (editeur.add_index if actifs else editeur.remove_index)(modele, objet)
             else:
                 (editeur.add_constraint if actifs else editeur.remove_constraint)(modele, objet)
+    with connection.cursor() as cur:
+        if actifs:
+            cur.execute("DROP INDEX IF EXISTS v10_hash_idx")
+            cur.execute("DROP INDEX IF EXISTS v10_hash_like_idx")
+        else:
+            cur.execute("CREATE INDEX v10_hash_idx ON core_image (hash_fichier)")
+            if connection.vendor == "postgresql":
+                cur.execute("CREATE INDEX v10_hash_like_idx ON core_image "
+                            "(hash_fichier varchar_pattern_ops)")
     analyser()
 
 
@@ -258,12 +269,13 @@ def main():
 
     basculer_index(False)
     resultats["plans"]["galerie_v1.0"] = plan(galerie)
+    resultats["taille_index_octets_v1.0"] = taille_index()
     for nom, f in requetes(client, "v1.0").items():
         resultats["requetes"].setdefault(nom, {})["v1.0"] = chrono(f)
 
     basculer_index(True)
     resultats["plans"]["galerie_v1.1"] = plan(galerie)
-    resultats["taille_index_octets"] = taille_index()
+    resultats["taille_index_octets_v1.1"] = taille_index()
     for nom, f in requetes(client, "v1.1").items():
         resultats["requetes"][nom]["v1.1"] = chrono(f)
 
@@ -275,6 +287,10 @@ def main():
         r["facteur"] = round(avant / apres, 1) if apres else None
         print(f"{nom:46} {avant:11.3f} {apres:11.3f} {r['facteur']:>7}x")
     print("* requête dont le code a aussi été optimisé en v1.1")
+    for v in ("v1.0", "v1.1"):
+        tailles = resultats[f"taille_index_octets_{v}"]
+        if tailles:
+            print(f"Index de core_image {v} : {sum(tailles.values()) / 1e6:.1f} Mo")
     print("\nPlan galerie v1.0 :", " | ".join(resultats["plans"]["galerie_v1.0"][:3]))
     print("Plan galerie v1.1 :", " | ".join(resultats["plans"]["galerie_v1.1"][:3]))
 

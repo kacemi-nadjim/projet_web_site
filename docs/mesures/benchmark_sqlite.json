@@ -5,80 +5,80 @@
   "requetes": {
     "Galerie — page 1 (24 images)": {
       "v1.0": {
-        "mediane_ms": 8.669,
-        "p95_ms": 11.814
+        "mediane_ms": 6.527,
+        "p95_ms": 11.015
       },
       "v1.1": {
-        "mediane_ms": 0.521,
-        "p95_ms": 0.551
+        "mediane_ms": 0.569,
+        "p95_ms": 0.654
       },
-      "facteur": 16.6
+      "facteur": 11.5
     },
     "Galerie — page 50": {
       "v1.0": {
-        "mediane_ms": 10.929,
-        "p95_ms": 20.349
+        "mediane_ms": 13.815,
+        "p95_ms": 14.613
       },
       "v1.1": {
-        "mediane_ms": 0.562,
-        "p95_ms": 0.608
+        "mediane_ms": 0.61,
+        "p95_ms": 0.676
       },
-      "facteur": 19.4
+      "facteur": 22.6
     },
     "Galerie — nombre total": {
       "v1.0": {
-        "mediane_ms": 7.11,
-        "p95_ms": 8.315
+        "mediane_ms": 7.031,
+        "p95_ms": 7.766
       },
       "v1.1": {
-        "mediane_ms": 1.288,
-        "p95_ms": 1.414
+        "mediane_ms": 1.367,
+        "p95_ms": 1.434
       },
-      "facteur": 5.5
+      "facteur": 5.1
     },
     "Export — sélection des images validées *": {
       "v1.0": {
-        "mediane_ms": 14.897,
-        "p95_ms": 15.713
+        "mediane_ms": 15.264,
+        "p95_ms": 17.93
       },
       "v1.1": {
-        "mediane_ms": 5.514,
-        "p95_ms": 5.697
+        "mediane_ms": 5.813,
+        "p95_ms": 6.306
       },
-      "facteur": 2.7
+      "facteur": 2.6
     },
     "Dashboard — calcul complet des indicateurs *": {
       "v1.0": {
-        "mediane_ms": 100.018,
-        "p95_ms": 115.031
+        "mediane_ms": 105.485,
+        "p95_ms": 113.057
       },
       "v1.1": {
-        "mediane_ms": 81.164,
-        "p95_ms": 95.921
+        "mediane_ms": 86.195,
+        "p95_ms": 95.142
       },
       "facteur": 1.2
     },
     "Dépôt — détection de doublon (SHA-256)": {
       "v1.0": {
-        "mediane_ms": 0.187,
-        "p95_ms": 0.25
+        "mediane_ms": 0.243,
+        "p95_ms": 0.357
       },
       "v1.1": {
-        "mediane_ms": 0.213,
-        "p95_ms": 0.499
+        "mediane_ms": 0.198,
+        "p95_ms": 0.297
       },
-      "facteur": 0.9
+      "facteur": 1.2
     },
     "Connexion — compteur anti force brute": {
       "v1.0": {
-        "mediane_ms": 11.203,
-        "p95_ms": 13.006
+        "mediane_ms": 11.385,
+        "p95_ms": 12.099
       },
       "v1.1": {
-        "mediane_ms": 0.389,
-        "p95_ms": 0.496
+        "mediane_ms": 0.426,
+        "p95_ms": 0.528
       },
-      "facteur": 28.8
+      "facteur": 26.7
     }
   },
   "plans": {
@@ -90,5 +90,6 @@
       "SEARCH core_image USING INDEX image_galerie_idx (client_id=?)"
     ]
   },
-  "taille_index_octets": {}
+  "taille_index_octets_v1.0": {},
+  "taille_index_octets_v1.1": {}
 }

@@ -7,9 +7,12 @@ import sys
 def main():
     """Lance les commandes d'administration."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-    # manage.py sert au développement local : on y active DEBUG par défaut.
-    # Le serveur de production passe par config/wsgi.py, où DEBUG reste
-    # désactivé tant que DJANGO_DEBUG n'est pas explicitement défini.
+    # Sur le serveur, le fichier .env fournit les réglages de production
+    # (dont DJANGO_DEBUG=False) : les commandes utilisent alors exactement
+    # la même configuration que le site.
+    from config.env import charger_env
+    charger_env()
+    # Sans .env (poste de développement), DEBUG est activé par défaut.
     os.environ.setdefault("DJANGO_DEBUG", "True")
     try:
         from django.core.management import execute_from_command_line

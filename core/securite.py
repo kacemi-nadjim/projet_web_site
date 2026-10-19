@@ -91,7 +91,12 @@ def valider_zip(fichier):
 # 3. CONNEXION : ANTI FORCE BRUTE
 # ------------------------------------------------------------
 def ip_client(request):
-    """Adresse IP du visiteur (derrière le proxy de l'hébergeur si besoin)."""
+    """
+    Adresse IP du visiteur (derrière le proxy de l'hébergeur si besoin).
+    Valeur indicative, réservée au journal : l'en-tête X-Forwarded-For peut
+    être falsifié par le client. C'est pourquoi le blocage anti force brute
+    se fait par IDENTIFIANT et ne dépend jamais de l'adresse IP.
+    """
     if request is None:
         return None
     transmise = request.META.get("HTTP_X_FORWARDED_FOR", "")

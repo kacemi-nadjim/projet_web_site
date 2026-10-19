@@ -1,0 +1,5 @@
+{
+ "jeu_de_donnees": "24 photos 4032x3024 (2,7 Mo en moyenne), toutes validees, client Wassa, compte lea_ds",
+ "v1.0": {"/galerie/": {"requetes_sql": 7, "temps_ms": 13.8}, "/dashboard/": {"requetes_sql": 8, "temps_ms": 7.0}, "/exporter/": {"requetes_sql": 31, "temps_ms": 1596.6, "taille_zip_octets": 65299651}},
+ "v1.1": {"/galerie/": {"requetes_sql": 7, "temps_ms": 11.5}, "/dashboard/": {"requetes_sql": 8, "temps_ms": 6.1}, "/exporter/": {"requetes_sql": 7, "temps_ms": 180.8, "taille_zip_octets": 65310944}}
+}
