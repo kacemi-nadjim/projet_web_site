@@ -67,6 +67,8 @@ la migration 0006 est réversible.
 - Défauts d'affichage hérités de la v1.0 : vignettes de la galerie
   rognées, barres du dashboard vides, cases à cocher décalées (ANO-019).
 - Erreur 404 sur `/favicon.ico` à chaque visite : icône du site ajoutée.
+- 5 erreurs de validation HTML (W3C) sur les formulaires d'inscription et
+  de mot de passe (ANO-020) : 17 pages désormais valides.
 
 ### Qualité et tests
 - 12 → **125 tests** automatisés ; couverture **62 % → 96 %** ; suite

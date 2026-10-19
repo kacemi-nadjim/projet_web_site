@@ -10,7 +10,7 @@
     <div class="field">
         {{ form.fichiers.label_tag }}
         {{ form.fichiers }}
-        {% for erreur in form.fichiers.errors %}<p class="flash flash-error" id="id_fichiers_error">{{ erreur }}</p>{% endfor %}
+        {% if form.fichiers.errors %}<div id="id_fichiers_error" role="alert">{% for erreur in form.fichiers.errors %}<p class="flash flash-error">{{ erreur }}</p>{% endfor %}</div>{% endif %}
     </div>
     <div class="field">
         <span class="field-label">{{ form.categories.label }}</span>

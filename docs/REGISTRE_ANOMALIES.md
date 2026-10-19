@@ -41,6 +41,7 @@ part, dans [INCIDENTS.md](INCIDENTS.md).
 | ANO-017 | Galerie triée en mémoire à chaque affichage (aucun index adapté) | Mineure | plan d'exécution `EXPLAIN` | Corrigée |
 | ANO-018 | Images supprimées conservées indéfiniment (fichiers compris) | Majeure (RGPD) | audit RGPD | Corrigée |
 | ANO-019 | Défauts d'affichage : vignettes rognées, barres du dashboard vides, cases à cocher décalées | Majeure | recette dans un vrai navigateur | Corrigée |
+| ANO-020 | HTML invalide sur les pages d'inscription et de mot de passe (5 erreurs W3C) | Mineure | validateur W3C sur 17 pages | Corrigée |
 
 ## Détail
 
@@ -218,3 +219,18 @@ part, dans [INCIDENTS.md](INCIDENTS.md).
 - **Enseignement** : les tests automatisés vérifient le HTML produit, pas
   son rendu visuel. Une recette visuelle dans un navigateur fait désormais
   partie de la procédure de mise à jour ([MAINTENANCE.md](MAINTENANCE.md)).
+
+### ANO-020 — HTML invalide sur deux formulaires (Mineure)
+- **Constat** : le validateur officiel du W3C (Nu Html Checker), lancé sur
+  17 pages (y compris les pages affichant des erreurs de formulaire),
+  signale 5 erreurs :
+  - sur les pages « Devenir contributeur » et « Changer mon mot de passe »,
+    des champs annoncent une aide (`aria-describedby`) qui n'existe pas
+    dans la page ;
+  - une liste est placée à l'intérieur d'un paragraphe, ce qui est interdit.
+  La validation de la v1.0 n'avait porté que sur la page d'accueil.
+- **Correction** : les textes d'aide portent l'identifiant attendu, la
+  liste est placée dans un bloc `div`, les erreurs du dépôt sont regroupées
+  sous un seul identifiant, et chaque carte de la galerie a un titre
+  réservé aux lecteurs d'écran.
+- **Vérification** : 17 pages, **0 erreur, 0 avertissement**.

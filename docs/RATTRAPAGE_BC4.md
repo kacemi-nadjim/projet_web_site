@@ -31,7 +31,7 @@ Une compétence est acquise à partir de 1,2.
 | Les tests couvrent les fonctionnalités critiques, résultats clairs | **Non acquis** | 12 → **125 tests** ; couverture **62 % → 96 %** (vues 47 → 94 %, import des lots 11 → 98 %) ; parcours de labélisation testé de bout en bout avec les vrais ZIP ; suite validée sur SQLite **et** PostgreSQL | `docs/TESTS.md`, `core/tests/`, `docs/mesures/audits/coverage_v1.*.txt` |
 | Tests de sécurité et d'accessibilité conformes aux normes | En cours | 32 tests de sécurité (OWASP : dépôt piégé, XSS/CSP, force brute, cloisonnement, bombe ZIP…) ; audits outillés `pip-audit` 9 → 0, `bandit` 4 → 0, `check --deploy` 1 → 0 ; contrôle automatique de structure accessible | `core/tests/test_securite.py`, `docs/SECURITE.md` §5, `docs/TESTS.md` §4 |
 | Choix des tests expliqués | Acquis | Stratégie par type de test | `docs/TESTS.md` §1 |
-| Anomalies analysées, solutions présentées | En cours | **19 anomalies** documentées : constat, cause, correctif, test de non-régression (dont 4 critiques) | `docs/REGISTRE_ANOMALIES.md` |
+| Anomalies analysées, solutions présentées | En cours | **20 anomalies** documentées : constat, cause, correctif, test de non-régression (dont 4 critiques) | `docs/REGISTRE_ANOMALIES.md` |
 
 ### C4.4 — Développement serveur et standards de programmation (1,00)
 

@@ -109,7 +109,7 @@ pip-audit -r requirements.txt
 | [docs/RATTRAPAGE_BC4.md](docs/RATTRAPAGE_BC4.md) | Correspondance critères du bloc 4 ↔ preuves |
 | [docs/MESURES_PERFORMANCE.md](docs/MESURES_PERFORMANCE.md) | Index, requêtes, poids des pages, EcoIndex : mesures avant/après |
 | [docs/TESTS.md](docs/TESTS.md) | Plan de tests, couverture, audits |
-| [docs/REGISTRE_ANOMALIES.md](docs/REGISTRE_ANOMALIES.md) | 19 anomalies : cause, correctif, test |
+| [docs/REGISTRE_ANOMALIES.md](docs/REGISTRE_ANOMALIES.md) | 20 anomalies : cause, correctif, test |
 | [docs/SECURITE.md](docs/SECURITE.md) | Analyse de risques, RGPD, RGAA |
 | [docs/SCHEMA_BDD.md](docs/SCHEMA_BDD.md) | Modèle relationnel, types, contraintes, index, sauvegardes |
 | [docs/MAINTENANCE.md](docs/MAINTENANCE.md) | Versions, calendrier de mises à jour, feuille de route, supervision |

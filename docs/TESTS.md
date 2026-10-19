@@ -74,6 +74,7 @@ illisible pendant la génération d'une miniature ou une erreur disque.
 | `manage.py check --deploy` | Réglages de sécurité Django pour la production | 1 avertissement (clé secrète) | **0** |
 | `bandit` | Failles courantes dans le code Python | 4 alertes (faible) | **0** |
 | `ruff` (règles E, F, W, I, B, UP, S, DJ) | Erreurs, style PEP 8, sécurité, bonnes pratiques Django | 32 erreurs | **0** |
+| Validateur W3C (Nu Html Checker), 17 pages | Validité du HTML (accessibilité, compatibilité navigateurs) | 5 erreurs | **0 erreur, 0 avertissement** |
 
 Sorties brutes : `docs/mesures/audits/`.
 
@@ -104,6 +105,6 @@ Captures : `docs/captures/`.
 
 ## 5. Anomalies découvertes par les tests
 
-La campagne de tests a mis au jour 19 anomalies, dont 4 critiques. Elles
+La campagne de tests a mis au jour 20 anomalies, dont 4 critiques. Elles
 sont toutes corrigées et couvertes par un test. Détail et analyse de
 cause : [REGISTRE_ANOMALIES.md](REGISTRE_ANOMALIES.md).
