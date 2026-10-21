@@ -75,6 +75,7 @@ illisible pendant la génération d'une miniature ou une erreur disque.
 | `bandit` | Failles courantes dans le code Python | 4 alertes (faible) | **0** |
 | `ruff` (règles E, F, W, I, B, UP, S, DJ) | Erreurs, style PEP 8, sécurité, bonnes pratiques Django | 32 erreurs | **0** |
 | Validateur W3C (Nu Html Checker), 17 pages | Validité du HTML (accessibilité, compatibilité navigateurs) | 5 erreurs | **0 erreur, 0 avertissement** |
+| `doiuse` (base « Can I use »), `outils/compatibilite_css/` | Propriétés CSS prises en charge par Chrome, Edge, Firefox, Safari, Safari iOS, Chrome Android (2 dernières versions) et Firefox ESR | — | **0 propriété non prise en charge** |
 
 Sorties brutes : `docs/mesures/audits/`.
 

@@ -48,34 +48,102 @@ des modèles de computer vision :
 | Images | Pillow | Vérification du contenu, dimensions, miniatures WebP |
 | Export | `zipfile` + `csv` (bibliothèque standard) | Brique ETL : Extract → Transform → Load |
 
-## Installation (développement)
+## Prérequis
+
+| Élément | Version | Remarque |
+|---|---|---|
+| Python | 3.10 à 3.13 | `python --version` pour vérifier |
+| pip | fourni avec Python | installe les dépendances listées dans `requirements.txt` |
+| Navigateur web | Chrome, Edge, Firefox ou Safari récent | voir « Compatibilité multi-navigateurs » |
+| Git | facultatif | seulement pour cloner le dépôt au lieu d'utiliser l'archive |
+| PostgreSQL 16 | facultatif | par défaut, le projet utilise SQLite (aucune installation) |
+
+Aucune variable d'environnement n'est nécessaire pour l'installation
+locale : `manage.py` active automatiquement le mode développement.
+
+## Installation (poste local)
+
+Depuis le dossier du projet (celui qui contient `manage.py`) :
 
 ```bash
 python -m venv venv
 venv\Scripts\activate            # Windows  (Mac/Linux : source venv/bin/activate)
 pip install -r requirements-dev.txt
-python manage.py migrate
-python manage.py seed            # données de démonstration
+python manage.py migrate         # crée la base SQLite db.sqlite3
+python manage.py loaddata dump.json   # données de démonstration du projet
 python manage.py runserver
 ```
 Site : http://127.0.0.1:8000 — Back-office : http://127.0.0.1:8000/admin/
 
-Données de démonstration réelles du projet (au lieu de `seed`) :
-`python manage.py loaddata dump.json` (avec le dossier `media/` fourni).
-`dump.sql` contient la même base au format SQL (SQLite).
+Le dossier `media/` (photos et ZIP de démonstration) est fourni avec le
+code : il doit rester à côté de `manage.py`.
 
-## Identifiants de démonstration
+**Variante avec l'export SQL** : `dump.sql` contient la même base
+(schéma + données) au format SQL SQLite. Au lieu de `migrate` et
+`loaddata` :
+```bash
+python -c "import sqlite3; sqlite3.connect('db.sqlite3').executescript(open('dump.sql', encoding='utf-8').read())"
+```
+(ou `sqlite3 db.sqlite3 < dump.sql` si l'outil `sqlite3` est installé).
 
-| Compte | Mot de passe | Rôle | Client |
+**Variante sans données** : `python manage.py seed` crée une démonstration
+minimale (mêmes comptes que ci-dessous).
+
+Ces trois procédures ont été vérifiées sur une installation neuve
+(base vide, environnement virtuel neuf).
+
+## Identifiants de test
+
+Mot de passe identique pour tous les comptes de démonstration : **demo1234**
+
+| Compte | Rôle | Entreprise | À tester |
 |---|---|---|---|
-| admin | demo1234 | Administrateur | Wassa |
-| karim_contrib | demo1234 | Contributeur | Wassa |
-| lea_ds | demo1234 | Data Scientist | Wassa |
-| paul_acme | demo1234 | Contributeur | ACME Parking |
-| sara_ds_acme | demo1234 | Data Scientist | ACME Parking |
+| **admin** | Administrateur (accès au back-office `/admin/`) | Wassa | Validation des dépôts, journal d'accès, comptes, demandes d'inscription |
+| lea_ds | Data scientist | Wassa | Dashboard, galerie, export du dataset, création de lots |
+| karim_contrib | Contributeur | Wassa | Dépôt d'images, lot assigné, soumission du travail |
+| sara_ds_acme | Data scientist | ACME Parking | Cloisonnement : ne voit aucune donnée de Wassa |
+| paul_acme | Contributeur | ACME Parking | Cloisonnement côté contributeur |
 
-Ces comptes servent uniquement à la démonstration. Dans un vrai
-déploiement, la commande `seed` n'est jamais lancée.
+Ces comptes ne contiennent que des données de démonstration. Pour
+vérifier la protection contre la force brute, se tromper 5 fois de mot
+de passe sur un compte : il est bloqué 15 minutes.
+
+## Accès administrateur au back-office
+
+- Adresse : `/admin/` (en local : http://127.0.0.1:8000/admin/)
+- Identifiant : **admin** — mot de passe : **demo1234**
+- Rubriques utiles : *Images* (validation avec aperçu), *Journal d'accès*
+  (lecture seule), *Demandes d'inscription*, *Lots de travail*,
+  *Messages de contact*, *Utilisateurs* et *Clients*.
+
+Créer un autre administrateur : `python manage.py createsuperuser`.
+
+## Base de données : connexion
+
+| Moteur | Utilisation | Identifiants |
+|---|---|---|
+| **SQLite** (par défaut) | installation locale et site de démonstration | Aucun identifiant : la base est le fichier `db.sqlite3`, créé par `migrate` (ou par l'import de `dump.sql`) |
+| **PostgreSQL 16** (cible de production) | activé par la variable `DATABASE_URL` | Base `pixbank`, utilisateur `pixbank_app`, mot de passe choisi à la création (script `docs/postgresql_setup.sql`) |
+
+Exemple PostgreSQL :
+```bash
+# Windows : set DATABASE_URL=...   Mac/Linux : export DATABASE_URL=...
+DATABASE_URL=postgres://pixbank_app:MOT_DE_PASSE@localhost:5432/pixbank
+python manage.py migrate
+python manage.py loaddata dump.json
+```
+
+## Compatibilité multi-navigateurs
+
+| Vérification | Résultat |
+|---|---|
+| Recette automatisée dans Chromium (`outils/verifier_navigateur.py`) : parcours complet, ordinateur et mobile (390 px) | 0 erreur JavaScript, 0 ressource en erreur, aucun débordement horizontal |
+| Analyse des propriétés CSS (`outils/compatibilite_css/`, base de données « Can I use ») pour les 2 dernières versions de Chrome, Edge, Firefox, Safari, Safari iOS, Chrome Android et Firefox ESR | Aucune propriété non prise en charge |
+| JavaScript | Un seul petit script (bandeau cookies), écrit en JavaScript standard compatible avec tous les navigateurs |
+| Validité du HTML (validateur W3C, 17 pages) | 0 erreur, 0 avertissement |
+
+Le site n'utilise ni framework JavaScript ni fonctionnalité expérimentale :
+le rendu est identique sur les navigateurs récents.
 
 Démo recommandée :
 1. Se connecter en `lea_ds`, ouvrir le **Dashboard**, puis **Exporter le dataset**.

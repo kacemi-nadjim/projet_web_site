@@ -19,3 +19,7 @@ backups/
 htmlcov/
 .coverage
 staticfiles/
+
+# Outils Node.js
+node_modules/
+package-lock.json

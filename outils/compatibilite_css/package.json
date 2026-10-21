@@ -1,0 +1,8 @@
+{
+  "name": "pixbank-compatibilite-css",
+  "private": true,
+  "description": "Vérifie que les propriétés CSS du site sont prises en charge par les navigateurs ciblés (base Can I use).",
+  "type": "module",
+  "scripts": { "verifier": "node verifier.mjs ../../static/css/style.css" },
+  "dependencies": { "doiuse": "6.0.6", "postcss": "8.5.31" }
+}
