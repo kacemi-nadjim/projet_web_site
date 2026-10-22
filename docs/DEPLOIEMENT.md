@@ -32,6 +32,7 @@ git push origin v1.0.0
 git add -A
 git commit -m "Version 1.1.0 : sécurité, performance, éco-conception, tests, exploitation"
 git tag v1.1.0
+git tag v1.1.1                 # correctif de sécurité (Pillow 13)
 git push origin main --tags    # ou « master » selon le nom de la branche
 ```
 
@@ -46,7 +47,7 @@ Dans une **console Bash** PythonAnywhere :
 cd ~
 git clone https://github.com/kacemi-nadjim/projet_web_site.git
 cd projet_web_site
-python3.10 -m venv venv && source venv/bin/activate
+python3.12 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 
 # Reprendre les données de l'ancienne installation (adapter le chemin)
@@ -76,7 +77,11 @@ sys.path.insert(0, "/home/nadjimkacemi/projet_web_site")
 from config.wsgi import application   # lit les réglages dans .env
 ```
 
-Puis lancer le premier déploiement : `bash outils/deployer.sh v1.1.0`.
+Dans l'onglet **Web** de PythonAnywhere, choisir **Python 3.12** pour
+l'application (Pillow 13 exige Python 3.11 au minimum) et indiquer le
+chemin du nouvel environnement virtuel (`~/projet_web_site/venv`).
+
+Puis lancer le premier déploiement : `bash outils/deployer.sh v1.1.1`.
 
 ## 4. Mise à jour courante
 

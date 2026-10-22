@@ -4,6 +4,21 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions : [versionnage sémantique](https://semver.org/lang/fr/) (`MAJEUR.MINEUR.CORRECTIF`).
 Chaque version correspond à une étiquette Git (`git tag`).
 
+## [1.1.1] — 2026-10-22
+
+Version corrective de sécurité, sans changement visible pour les
+utilisateurs.
+
+### Sécurité
+- Pillow 12.3.0 → **13.0.0** : 35 vulnérabilités publiées en octobre 2026
+  et signalées par le contrôle `pip-audit`. Après mise à jour :
+  `pip-audit` → 0 vulnérabilité ; 125 tests réussis, couverture 96 %.
+
+### Modifié
+- Python **3.11** minimum (exigence de Pillow 13). Le serveur passe en
+  Python 3.12, ce qui prépare aussi la migration vers Django 6
+  (voir `docs/MAINTENANCE.md`).
+
 ## [1.1.0] — 2026-10-19
 
 Version de consolidation : sécurité, performance, éco-conception,

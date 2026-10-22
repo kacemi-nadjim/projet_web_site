@@ -43,7 +43,7 @@ from .permissions import peut_gerer_lot, peut_voir_image, peut_voir_lot
 
 logger = logging.getLogger("pixbank.vues")
 
-# Python 3.10 (version de PythonAnywhere) ne connaît pas toujours WebP.
+# Certaines installations de Python ne déclarent pas le type WebP.
 mimetypes.add_type("image/webp", ".webp")
 
 

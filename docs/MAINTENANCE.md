@@ -45,7 +45,8 @@ python manage.py purger_images_supprimees  # 02:45 — effacement définitif > 3
 |---|---|---|
 | **Fait (v1.1)** | Django 5.2.15 → 5.2.18 | 9 alertes de sécurité connues sur la 5.2.15 |
 | **Fait (v1.1)** | Configuration PostgreSQL via `DATABASE_URL`, tests validés sur PostgreSQL 16 | Base robuste pour plusieurs utilisateurs simultanés |
-| **Avant avril 2027** | Passage de l'hébergement en Python 3.12 ou plus | Les versions de Django à partir de la 6.0 exigent Python 3.12 au minimum |
+| **Fait (v1.1.1, 22/10/2026)** | Pillow 12.3.0 → 13.0.0 | 35 vulnérabilités publiées en octobre 2026, détectées par `pip-audit` et corrigées le jour même |
+| **Avec la v1.1.1** | Passage de l'hébergement en Python 3.12 | Pillow 13 exige Python 3.11 ; en choisissant 3.12, on prépare aussi Django 6, qui l'exige |
 | **2ᵉ semestre 2027** | Migration vers **Django 6.2 LTS** (sortie prévue en avril 2027, maintenue jusqu'en avril 2030) | Django 5.2 LTS n'est plus maintenu après **avril 2028** : on migre avec plusieurs mois de marge, une fois les premiers correctifs de la 6.2 publiés |
 | **À partir de 2028** | Rythme annuel (Django 2028, 2029…) | Django passe à une version par an, chacune maintenue 3 ans |
 | Évolution envisagée | Cache des indicateurs du dashboard (5 min) | Le calcul par catégorie reste la requête la plus coûteuse (60 à 86 ms sur 50 000 images) |

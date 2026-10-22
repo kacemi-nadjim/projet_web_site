@@ -59,7 +59,7 @@ Une compétence est acquise à partir de 1,2.
 
 | Critère | S1 | Ce qui a été fait en v1.1 | Preuve |
 |---|---|---|---|
-| Plan des mises à jour (calendrier, gestion des versions) | En cours | Versionnage sémantique + étiquettes Git + CHANGELOG ; calendrier (alertes Django, mensuel, trimestriel, annuel) ; feuille de route Django 5.2 LTS (fin en avril 2028) → 6.2 LTS (Python 3.12 requis) ; mise à jour réelle 5.2.15 → 5.2.18 | `docs/MAINTENANCE.md` §1 à 3, `CHANGELOG.md` |
+| Plan des mises à jour (calendrier, gestion des versions) | En cours | Versionnage sémantique + étiquettes Git + CHANGELOG ; calendrier (alertes Django, mensuel, trimestriel, annuel) ; feuille de route Django 5.2 LTS (fin en avril 2028) → 6.2 LTS (Python 3.12 requis) ; mises à jour réelles : Django 5.2.15 → 5.2.18, puis Pillow 12.3.0 → 13.0.0 (v1.1.1, 35 failles signalées par `pip-audit`, corrigées le jour même) | `docs/MAINTENANCE.md` §1 à 3, `CHANGELOG.md` |
 | Processus de déploiement structuré, supervision des incidents | En cours | Script de déploiement qui s'arrête à la moindre erreur et sauvegarde avant de modifier ; retour arrière testé (migration réversible) ; `/sante/` + surveillance externe ; e-mail sur erreur 500 ; processus d'incident (P1/P2/P3) et **2 fiches d'incidents réels** | `outils/deployer.sh`, `docs/DEPLOIEMENT.md`, `docs/INCIDENTS.md` |
 | Stratégies expliquées (impact des évolutions technologiques sur performance et sécurité) | En cours | Procédure de mise à jour en 6 étapes (tests sur 2 moteurs, audits, accessibilité) ; analyse de l'impact d'une montée de version (Python, LTS, cycle annuel de Django à partir de 2028) | `docs/MAINTENANCE.md` §3 |
 
@@ -78,7 +78,7 @@ Une compétence est acquise à partir de 1,2.
 
 ## Démonstration proposée pour l'oral (environ 6 minutes)
 
-1. **`/sante/`** → affiche la version 1.1.0 et l'état de la base (supervision).
+1. **`/sante/`** → affiche la version 1.1.1 et l'état de la base (supervision).
 2. **Adresse d'une photo ouverte en navigation privée** → redirection vers
    la connexion. Connecté avec un autre client → 404, visible ensuite dans
    le journal d'accès (C4.5, C4.7).

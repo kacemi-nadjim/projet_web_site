@@ -1,7 +1,7 @@
 # PixBank — Banque d'images d'entraînement pour le deep learning
 
 Projet annuel — Bachelor Data & Business Intelligence (Nexa Digital School)
-Titre RNCP40857 « Chef de projet web » — **version 1.1.0**
+Titre RNCP40857 « Chef de projet web » — **version 1.1.1**
 
 ## Site en ligne
 
@@ -52,7 +52,7 @@ des modèles de computer vision :
 
 | Élément | Version | Remarque |
 |---|---|---|
-| Python | 3.10 à 3.13 | `python --version` pour vérifier |
+| Python | 3.11 à 3.13 | `python --version` pour vérifier (Pillow 13 exige 3.11 au minimum) |
 | pip | fourni avec Python | installe les dépendances listées dans `requirements.txt` |
 | Navigateur web | Chrome, Edge, Firefox ou Safari récent | voir « Compatibilité multi-navigateurs » |
 | Git | facultatif | seulement pour cloner le dépôt au lieu d'utiliser l'archive |
@@ -159,6 +159,20 @@ coverage run manage.py test && coverage report     # couverture : 96 %
 ruff check .  &&  bandit -r core config -x core/tests,core/migrations
 pip-audit -r requirements.txt
 ```
+
+**Contrôle de la configuration de production** : sur un poste sans
+fichier `.env`, `manage.py` active le mode développement ; la commande
+`check --deploy` affiche alors 5 avertissements attendus (HTTPS, cookies
+sécurisés, HSTS, DEBUG). Pour contrôler les réglages réels de production :
+```bash
+# Mac/Linux (Windows : définir les mêmes variables avec « set »)
+DJANGO_DEBUG=False DJANGO_SECRET_KEY=une-cle-longue-et-aleatoire-de-50-caracteres-minimum \
+DJANGO_ALLOWED_HOSTS=nadjimkacemi.pythonanywhere.com python manage.py check --deploy
+# → System check identified no issues (0 silenced).
+```
+Sur le serveur, le fichier `.env` fournit ces valeurs et le script de
+déploiement refuse de publier une version si cette commande signale le
+moindre avertissement.
 
 | Indicateur | v1.0 | v1.1 |
 |---|---|---|
