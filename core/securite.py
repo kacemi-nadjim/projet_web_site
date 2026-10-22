@@ -4,7 +4,7 @@ SECURITE.PY — Contrôles de sécurité centralisés.
 1. Validation des images déposées : on vérifie le CONTENU réel du fichier
    (avec Pillow), pas seulement son extension. Avant la v1.1, un fichier
    HTML contenant du JavaScript était accepté comme « image » (anomalie
-   ANO-003, voir docs/REGISTRE_ANOMALIES.md).
+   ANO-003, voir le registre des anomalies du dossier de projet).
 2. Validation des ZIP : taille, nombre de fichiers, taille décompressée
    (anti « bombe ZIP ») et chemins dangereux (« ../ »).
 3. Limitation des tentatives de connexion (anti force brute), appuyée sur

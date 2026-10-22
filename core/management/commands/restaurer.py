@@ -6,7 +6,7 @@ Usage : python manage.py restaurer backups/pixbank_AAAAMMJJ_HHMMSS --confirmer
 Étapes : vérification des empreintes SHA-256 du manifeste -> vidage de la
 base -> rechargement des données -> remise en place des fichiers.
 L'option --confirmer est obligatoire : la restauration remplace les
-données actuelles (procédure détaillée dans docs/DEPLOIEMENT.md).
+données actuelles (une sauvegarde est faite juste avant par le script de déploiement).
 """
 
 import gzip

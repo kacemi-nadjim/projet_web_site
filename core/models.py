@@ -12,7 +12,7 @@ Django génère le SQL automatiquement via les migrations (ORM).
 
 ÉVOLUTIONS v1.1 (rattrapage) :
 - Index composites alignés sur les requêtes réelles (galerie, export,
-  dashboard) -> mesures avant/après dans docs/MESURES_PERFORMANCE.md
+  dashboard) -> mesures avant/après dans docs/mesures/
 - Contrainte d'unicité PARTIELLE : l'anti-doublon est garanti par la base
   elle-même, pas seulement par le code (résiste aux dépôts simultanés)
 - Contrainte CHECK sur le score qualité (toujours entre 0 et 100)

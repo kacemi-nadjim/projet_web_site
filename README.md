@@ -34,7 +34,7 @@ des modèles de computer vision :
 - **RGPD** : consentement, effacement définitif après 30 jours, journal
   conservé 180 jours, aucun service tiers
 - **Sécurité** : anti force brute, journal d'accès, CSP, HTTPS/HSTS, anti
-  bombe ZIP (voir [docs/SECURITE.md](docs/SECURITE.md))
+  bombe ZIP
 - **Exploitation** : sauvegarde/restauration vérifiée, supervision
   `/sante/`, alertes e-mail, déploiement scripté
 
@@ -185,20 +185,13 @@ moindre avertissement.
 
 ## Documentation
 
-| Document | Contenu |
+| Élément | Contenu |
 |---|---|
+| `KACEMI_NADJIM_PROJET_V2.pdf` | Dossier de projet (conception, choix techniques, mesures, tests, maintenance) |
 | [CHANGELOG.md](CHANGELOG.md) | Historique des versions |
-| [docs/RATTRAPAGE_BC4.md](docs/RATTRAPAGE_BC4.md) | Correspondance critères du bloc 4 ↔ preuves |
-| [docs/MESURES_PERFORMANCE.md](docs/MESURES_PERFORMANCE.md) | Index, requêtes, poids des pages, EcoIndex : mesures avant/après |
-| [docs/TESTS.md](docs/TESTS.md) | Plan de tests, couverture, audits |
-| [docs/REGISTRE_ANOMALIES.md](docs/REGISTRE_ANOMALIES.md) | 20 anomalies : cause, correctif, test |
-| [docs/SECURITE.md](docs/SECURITE.md) | Analyse de risques, RGPD, RGAA |
-| [docs/SCHEMA_BDD.md](docs/SCHEMA_BDD.md) | Modèle relationnel, types, contraintes, index, sauvegardes |
-| [docs/MAINTENANCE.md](docs/MAINTENANCE.md) | Versions, calendrier de mises à jour, feuille de route, supervision |
-| [docs/INCIDENTS.md](docs/INCIDENTS.md) | Processus d'incident et fiches réelles |
-| [docs/DEPLOIEMENT.md](docs/DEPLOIEMENT.md) | Mise en production, retour arrière, PostgreSQL, tâches planifiées |
-| `docs/captures/` | Captures d'écran de la recette v1.1 |
 | `docs/mesures/` | Résultats bruts des mesures et des audits (avant/après) |
+| `docs/captures/` | Captures d'écran de la recette v1.1 |
+| `docs/postgresql_setup.sql` | Création de la base et du compte PostgreSQL |
 
 ## Structure
 
@@ -221,5 +214,5 @@ core/
 templates/       pages HTML (mobile-first)
 static/          CSS, polices auto-hébergées, JS
 outils/          déploiement et outils de mesure (benchmark, EcoIndex)
-docs/            documentation technique et mesures
+docs/            résultats de mesures, captures, script PostgreSQL
 ```

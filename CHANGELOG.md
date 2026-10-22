@@ -16,8 +16,7 @@ utilisateurs.
 
 ### Modifié
 - Python **3.11** minimum (exigence de Pillow 13). Le serveur passe en
-  Python 3.12, ce qui prépare aussi la migration vers Django 6
-  (voir `docs/MAINTENANCE.md`).
+  Python 3.12, ce qui prépare aussi la migration vers Django 6.
 
 ## [1.1.0] — 2026-10-19
 
@@ -94,7 +93,7 @@ la migration 0006 est réversible.
   `securite.py`, `statistiques.py`, `miniatures.py`.
 
 ### Mise à jour depuis 1.0.0
-Voir [docs/DEPLOIEMENT.md](docs/DEPLOIEMENT.md) : `bash outils/deployer.sh v1.1.0`,
+`bash outils/deployer.sh v1.1.0`,
 puis **supprimer le mappage public `/media/`** dans l'onglet Web de PythonAnywhere.
 
 ## [1.0.0] — 2026-09 (version soutenue)

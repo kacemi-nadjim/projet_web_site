@@ -4,7 +4,7 @@ conservation (180 jours par défaut). Les adresses IP sont des données
 personnelles : le RGPD impose de ne pas les garder indéfiniment.
 Usage : python manage.py purger_journal [--jours 180]
 Planification conseillée : tâche quotidienne (onglet « Tasks » de
-PythonAnywhere), voir docs/MAINTENANCE.md.
+PythonAnywhere).
 """
 
 from datetime import timedelta

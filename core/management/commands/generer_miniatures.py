@@ -1,7 +1,7 @@
 """
 Génère les miniatures manquantes (images déposées avant la v1.1).
 Usage : python manage.py generer_miniatures
-À lancer une seule fois après la mise à jour (voir docs/DEPLOIEMENT.md).
+À lancer une seule fois après la mise à jour vers la v1.1.
 """
 
 from django.core.management.base import BaseCommand

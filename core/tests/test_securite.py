@@ -1,6 +1,6 @@
 """
 TESTS DE SÉCURITÉ — chaque test correspond à un risque identifié
-(voir docs/REGISTRE_ANOMALIES.md et la section sécurité du dossier).
+(voir le registre des anomalies et la section sécurité du dossier de projet).
 """
 
 import io

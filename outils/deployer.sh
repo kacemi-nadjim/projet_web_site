@@ -49,6 +49,6 @@ for essai in range(10):
     except Exception as exc:
         print("En attente du redémarrage...", exc)
         time.sleep(3)
-sys.exit("ERREUR : le site ne répond pas — voir docs/INCIDENTS.md (retour arrière)")
+sys.exit("ERREUR : le site ne répond pas — revenir à la version précédente (git checkout <version>)")
 PY
 echo "Version $VERSION déployée."

@@ -42,7 +42,7 @@ if not SECRET_KEY:
     else:
         raise ImproperlyConfigured(
             "DJANGO_SECRET_KEY doit être défini en production "
-            "(voir docs/DEPLOIEMENT.md).")
+            "(voir le modèle .env.exemple).")
 
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")

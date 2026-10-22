@@ -7,7 +7,7 @@ TESTS DE PERFORMANCE — garde-fous automatiques.
 2. Les index créés en v1.1 sont réellement utilisés par la base
    (vérification du plan d'exécution).
 Les mesures chiffrées (temps, avant/après) sont dans
-docs/MESURES_PERFORMANCE.md (script outils/benchmark_bdd.py).
+docs/mesures/benchmark_*.json (script outils/benchmark_bdd.py).
 """
 
 import unittest

@@ -9,7 +9,7 @@ Passé ce délai, cette commande efface la ligne ET les fichiers (original
 jusqu'au bout et l'espace disque est libéré.
 
 Usage : python manage.py purger_images_supprimees [--jours 30]
-Planification : tâche quotidienne (voir docs/MAINTENANCE.md).
+Planification : tâche quotidienne (onglet « Tasks » de PythonAnywhere).
 """
 
 from datetime import timedelta

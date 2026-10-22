@@ -68,7 +68,7 @@ def contact(request):
 
     Le message est enregistré en base (modèle MessageContact) pour que
     l'administrateur puisse le consulter depuis le back-office
-    (correctif de l'incident INC-002, voir docs/INCIDENTS.md)."""
+    (correctif de l'incident INC-002, voir le dossier de projet, section 2.12)."""
     envoye = False
     if request.method == "POST":
         form = ContactForm(request.POST)
