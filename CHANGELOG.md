@@ -1,9 +1,5 @@
 # Journal des modifications — PixBank
 
-Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
-Versions : [versionnage sémantique](https://semver.org/lang/fr/) (`MAJEUR.MINEUR.CORRECTIF`).
-Chaque version correspond à une étiquette Git (`git tag`).
-
 ## [1.1.1] — 2026-10-22
 
 Version corrective de sécurité, sans changement visible pour les

@@ -52,7 +52,7 @@ des modèles de computer vision :
 
 | Élément | Version | Remarque |
 |---|---|---|
-| Python | 3.11 à 3.13 | `python --version` pour vérifier (Pillow 13 exige 3.11 au minimum) |
+| Python | 3.11 à 3.14 | `python --version` pour vérifier (Pillow 13 exige 3.11 au minimum) |
 | pip | fourni avec Python | installe les dépendances listées dans `requirements.txt` |
 | Navigateur web | Chrome, Edge, Firefox ou Safari récent | voir « Compatibilité multi-navigateurs » |
 | Git | facultatif | seulement pour cloner le dépôt au lieu d'utiliser l'archive |

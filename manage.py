@@ -7,9 +7,6 @@ import sys
 def main():
     """Lance les commandes d'administration."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-    # Sur le serveur, le fichier .env fournit les réglages de production
-    # (dont DJANGO_DEBUG=False) : les commandes utilisent alors exactement
-    # la même configuration que le site.
     from config.env import charger_env
     charger_env()
     # Sans .env (poste de développement), DEBUG est activé par défaut.

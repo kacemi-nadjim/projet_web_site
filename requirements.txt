@@ -1,7 +1,6 @@
-# Dépendances de production — versions figées (reproductibilité).
 # Mise à jour : contrôle mensuel avec pip-audit (voir CHANGELOG.md).
-# Compatibles Python 3.11 à 3.13 (Pillow 13 exige Python 3.11 ou plus).
-Django==5.2.18            # LTS, correctifs de sécurité jusqu'en avril 2028
-Pillow==13.0.0            # lecture/validation des images, miniatures WebP (13.0.0 : 35 failles corrigées)
-dj-database-url==3.1.2    # configuration de la base via DATABASE_URL
-psycopg[binary]==3.3.6    # pilote PostgreSQL
+# Compatibles Python 3.11 à 3.14 (Pillow 13 exige Python 3.11 ou plus).
+Django==5.2.18
+Pillow==13.0.0
+dj-database-url==3.1.2
+psycopg[binary]==3.3.6
