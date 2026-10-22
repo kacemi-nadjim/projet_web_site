@@ -7,7 +7,7 @@ quelques centimètres à l'écran. On génère donc, une seule fois au dépôt,
 une miniature WebP (480 px de côté maximum, quelques dizaines de Ko).
 
 Gains : poids de page divisé, bande passante et énergie économisées côté
-serveur, réseau et terminal. Mesures : docs/mesures/poids_pages.json.
+serveur, réseau et terminal (mesures : outils/mesurer_pages.py).
 L'original reste intact pour l'export des datasets (qualité préservée).
 """
 

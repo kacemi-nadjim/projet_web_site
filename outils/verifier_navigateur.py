@@ -12,7 +12,7 @@ les données de démonstration (dump.json) et vérifie :
 et enregistre des captures d'écran.
 
 Usage (site lancé avec : python manage.py loaddata dump.json && python manage.py runserver) :
-    python outils/verifier_navigateur.py --base http://127.0.0.1:8000 --captures docs/captures_recette
+    python outils/verifier_navigateur.py --base http://127.0.0.1:8000 --captures captures_recette
 ATTENTION : le test de force brute bloque le compte sara_ds_acme 15 minutes.
 """
 

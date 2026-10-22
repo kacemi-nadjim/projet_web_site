@@ -123,7 +123,7 @@ Créer un autre administrateur : `python manage.py createsuperuser`.
 | Moteur | Utilisation | Identifiants |
 |---|---|---|
 | **SQLite** (par défaut) | installation locale et site de démonstration | Aucun identifiant : la base est le fichier `db.sqlite3`, créé par `migrate` (ou par l'import de `dump.sql`) |
-| **PostgreSQL 16** (cible de production) | activé par la variable `DATABASE_URL` | Base `pixbank`, utilisateur `pixbank_app`, mot de passe choisi à la création (script `docs/postgresql_setup.sql`) |
+| **PostgreSQL 16** (cible de production) | activé par la variable `DATABASE_URL` | Base `pixbank`, utilisateur `pixbank_app`, mot de passe choisi à la création (script `outils/postgresql_setup.sql`) |
 
 Exemple PostgreSQL :
 ```bash
@@ -189,9 +189,6 @@ moindre avertissement.
 |---|---|
 | `KACEMI_NADJIM_PROJET_V2.pdf` | Dossier de projet (conception, choix techniques, mesures, tests, maintenance) |
 | [CHANGELOG.md](CHANGELOG.md) | Historique des versions |
-| `docs/mesures/` | Résultats bruts des mesures et des audits (avant/après) |
-| `docs/captures/` | Captures d'écran de la recette v1.1 |
-| `docs/postgresql_setup.sql` | Création de la base et du compte PostgreSQL |
 
 ## Structure
 
@@ -214,5 +211,4 @@ core/
 templates/       pages HTML (mobile-first)
 static/          CSS, polices auto-hébergées, JS
 outils/          déploiement et outils de mesure (benchmark, EcoIndex)
-docs/            résultats de mesures, captures, script PostgreSQL
 ```

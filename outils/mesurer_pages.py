@@ -13,7 +13,7 @@ et calcule l'EcoIndex correspondant.
 Usage (le site doit tourner) :
     pip install playwright && playwright install chromium
     python outils/mesurer_pages.py http://127.0.0.1:8000 lea_ds demo1234 \
-        /galerie/ /dashboard/ --sortie docs/mesures/pages.json
+        /galerie/ /dashboard/ --sortie pages.json
 """
 
 import argparse
