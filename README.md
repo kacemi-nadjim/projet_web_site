@@ -154,7 +154,7 @@ Démo recommandée :
 ## Tests et qualité
 
 ```bash
-python manage.py test                              # 125 tests (~4 s)
+python manage.py test                              # 125 tests (~4 à 15 s selon le PC)
 coverage run manage.py test && coverage report     # couverture : 96 %
 ruff check .  &&  bandit -r core config -x core/tests,core/migrations
 pip-audit -r requirements.txt
