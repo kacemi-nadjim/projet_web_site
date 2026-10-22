@@ -9,7 +9,7 @@ Usage :
     python manage.py reset_admin                       (local : demo1234)
     python manage.py reset_admin --mot-de-passe XXXX   (mot de passe choisi)
 
-Sécurité (v1.1) : en production (DEBUG désactivé), la commande ne remet
+Sécurité (V2) : en production (DEBUG désactivé), la commande ne remet
 plus jamais le mot de passe de démonstration « demo1234 », connu de tous :
 sans --mot-de-passe, elle génère un mot de passe aléatoire robuste,
 affiché une seule fois.

@@ -35,7 +35,7 @@
     <article class="card">
         <h2 class="visually-hidden">Image {{ forloop.counter }} : {{ image.labels|default:"sans catégorie" }}</h2>
         <div class="card-img">
-            {# v1.1 : la miniature WebP (quelques Ko) remplace l'original (plusieurs Mo) #}
+            {# V2 : la miniature WebP (quelques Ko) remplace l'original (plusieurs Mo) #}
             <img src="{% if image.miniature %}{{ image.miniature.url }}{% else %}{{ image.fichier.url }}{% endif %}"
                  alt="Image : {{ image.labels }}" loading="lazy" decoding="async" width="480" height="360">
             <span class="badge badge-{{ image.statut }}">{{ image.get_statut_display }}</span>

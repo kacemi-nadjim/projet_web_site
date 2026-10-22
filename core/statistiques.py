@@ -1,10 +1,10 @@
 """
 STATISTIQUES.PY — Indicateurs du dashboard BI (cloisonnés par client).
 
-Optimisations v1.1 (mesures : outils/benchmark_bdd.py) :
+Optimisations V2 (mesures : outils/benchmark_bdd.py) :
   - répartition par statut en UNE requête GROUP BY, servie directement
     par l'index partiel (client, statut) sans lire la table ;
-  - la requête « par catégorie » n'est plus exécutée deux fois (en v1.0,
+  - la requête « par catégorie » n'est plus exécutée deux fois (en V1,
     lire le maximum puis afficher la liste déclenchait deux requêtes) ;
   - images à données personnelles : sous-requête EXISTS au lieu d'une
     jointure suivie d'un DISTINCT ;

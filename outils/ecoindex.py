@@ -10,7 +10,7 @@ La note (0 à 100, grade A à G) combine trois mesures de la page :
 Chaque mesure est positionnée sur une échelle de quantiles établie sur
 un large échantillon de sites réels.
 
-Quantiles et grades : référentiel « ecoindex_reference » v1.0.2 (cnumr),
+Quantiles et grades : référentiel « ecoindex_reference » V1.2 (cnumr),
 repris à l'identique (licence CC BY-NC-ND 3.0, usage non commercial).
 """
 

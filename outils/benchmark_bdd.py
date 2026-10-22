@@ -1,11 +1,11 @@
 """
-BENCHMARK_BDD.PY — Mesure l'effet des index de la v1.1 sur les requêtes réelles.
+BENCHMARK_BDD.PY — Mesure l'effet des index de la V2 sur les requêtes réelles.
 
 Le script crée une base JETABLE (jamais la base du site), la remplit avec
 un volume réaliste, puis chronomètre les requêtes exactes de l'application
 dans deux situations :
-  1. « v1.0 » : sans les index ajoutés en v1.1 ;
-  2. « v1.1 » : avec les index partiels et composites.
+  1. « V1 » : sans les index ajoutés en V2 ;
+  2. « V2 » : avec les index partiels et composites.
 Chaque requête est exécutée 25 fois (après 3 exécutions de chauffe) ; on
 retient la médiane (valeur typique) et le 95e centile (cas lents).
 
@@ -117,7 +117,7 @@ def analyser():
 
 
 def index_v11():
-    """Les index et contraintes ajoutés par la migration 0006 (v1.1)."""
+    """Les index et contraintes ajoutés par la migration 0006 (V2)."""
     from core.models import Export, Image, JournalAcces
     elements = []
     for modele in (Image, Export, JournalAcces):
@@ -129,7 +129,7 @@ def index_v11():
 
 
 def basculer_index(actifs):
-    """actifs=False : situation de la v1.0 (index v1.1 retirés, index simple
+    """actifs=False : situation de la V1 (index V2 retirés, index simple
     sur l'empreinte remis — sous PostgreSQL, Django en créait deux)."""
     from django.db import connection
     with connection.schema_editor() as editeur:
@@ -151,7 +151,7 @@ def basculer_index(actifs):
 
 
 def dashboard_v10(client):
-    """Réplique exacte du calcul du dashboard de la v1.0 (y compris la double
+    """Réplique exacte du calcul du dashboard de la V1 (y compris la double
     évaluation de la requête par catégorie et l'auteur de chaque export)."""
     from django.db.models import Count, Q
 
@@ -181,7 +181,7 @@ def dashboard_v11(client):
 
 
 def requetes(client, version):
-    """Les requêtes exactes des vues. Quand le CODE a changé en v1.1, chaque
+    """Les requêtes exactes des vues. Quand le CODE a changé en V2, chaque
     version exécute sa propre requête (signalé par « * » dans le rapport)."""
     from datetime import timedelta
 
@@ -191,7 +191,7 @@ def requetes(client, version):
 
     actives = Image.objects.filter(client=client, is_deleted=False)
     un_hash = actives.values_list("hash_fichier", flat=True)[1000]
-    v10 = version == "v1.0"
+    v10 = version == "V1"
     return {
         "Galerie — page 1 (24 images)":
             lambda: list(actives.order_by("-date_upload")[:24]),
@@ -268,31 +268,31 @@ def main():
                  "repetitions": REPETITIONS, "requetes": {}, "plans": {}}
 
     basculer_index(False)
-    resultats["plans"]["galerie_v1.0"] = plan(galerie)
-    resultats["taille_index_octets_v1.0"] = taille_index()
-    for nom, f in requetes(client, "v1.0").items():
-        resultats["requetes"].setdefault(nom, {})["v1.0"] = chrono(f)
+    resultats["plans"]["galerie_V1"] = plan(galerie)
+    resultats["taille_index_octets_V1"] = taille_index()
+    for nom, f in requetes(client, "V1").items():
+        resultats["requetes"].setdefault(nom, {})["V1"] = chrono(f)
 
     basculer_index(True)
-    resultats["plans"]["galerie_v1.1"] = plan(galerie)
-    resultats["taille_index_octets_v1.1"] = taille_index()
-    for nom, f in requetes(client, "v1.1").items():
-        resultats["requetes"][nom]["v1.1"] = chrono(f)
+    resultats["plans"]["galerie_V2"] = plan(galerie)
+    resultats["taille_index_octets_V2"] = taille_index()
+    for nom, f in requetes(client, "V2").items():
+        resultats["requetes"][nom]["V2"] = chrono(f)
 
     print(f"\nMoteur : {connection.vendor} — {args.images} images "
           f"(médiane de {REPETITIONS} exécutions)\n")
-    print(f"{'Requête':46} {'v1.0 (ms)':>11} {'v1.1 (ms)':>11} {'gain':>8}")
+    print(f"{'Requête':46} {'V1 (ms)':>11} {'V2 (ms)':>11} {'gain':>8}")
     for nom, r in resultats["requetes"].items():
-        avant, apres = r["v1.0"]["mediane_ms"], r["v1.1"]["mediane_ms"]
+        avant, apres = r["V1"]["mediane_ms"], r["V2"]["mediane_ms"]
         r["facteur"] = round(avant / apres, 1) if apres else None
         print(f"{nom:46} {avant:11.3f} {apres:11.3f} {r['facteur']:>7}x")
-    print("* requête dont le code a aussi été optimisé en v1.1")
-    for v in ("v1.0", "v1.1"):
+    print("* requête dont le code a aussi été optimisé en V2")
+    for v in ("V1", "V2"):
         tailles = resultats[f"taille_index_octets_{v}"]
         if tailles:
             print(f"Index de core_image {v} : {sum(tailles.values()) / 1e6:.1f} Mo")
-    print("\nPlan galerie v1.0 :", " | ".join(resultats["plans"]["galerie_v1.0"][:3]))
-    print("Plan galerie v1.1 :", " | ".join(resultats["plans"]["galerie_v1.1"][:3]))
+    print("\nPlan galerie V1 :", " | ".join(resultats["plans"]["galerie_V1"][:3]))
+    print("Plan galerie V2 :", " | ".join(resultats["plans"]["galerie_V2"][:3]))
 
     if args.sortie:
         Path(args.sortie).write_text(json.dumps(resultats, indent=2, ensure_ascii=False),

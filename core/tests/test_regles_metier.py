@@ -1,8 +1,8 @@
 """
-TEST_REGLES_METIER.PY — Les 12 tests de la v1.0 (règles métier critiques).
+TEST_REGLES_METIER.PY — Les 12 tests de la V1 (règles métier critiques).
 Lancer avec : python manage.py test
 
-v1.1 : seule adaptation, l'export renvoie désormais une réponse en flux
+V2 : seule adaptation, l'export renvoie désormais une réponse en flux
 (FileResponse) -> on lit son contenu avec streaming_content.
 """
 

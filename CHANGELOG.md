@@ -1,20 +1,6 @@
 # Journal des modifications — PixBank
 
-## [1.1.1] — 2026-10-22
-
-Version corrective de sécurité, sans changement visible pour les
-utilisateurs.
-
-### Sécurité
-- Pillow 12.3.0 → **13.0.0** : 35 vulnérabilités publiées en octobre 2026
-  et signalées par le contrôle `pip-audit`. Après mise à jour :
-  `pip-audit` → 0 vulnérabilité ; 125 tests réussis, couverture 96 %.
-
-### Modifié
-- Python **3.11** minimum (exigence de Pillow 13). Le serveur passe en
-  Python 3.12, ce qui prépare aussi la migration vers Django 6.
-
-## [1.1.0] — 2026-10-19
+## V2 — octobre 2026
 
 Version de consolidation : sécurité, performance, éco-conception,
 tests et exploitation. Aucune fonctionnalité existante n'a été retirée ;
@@ -36,6 +22,9 @@ la migration 0006 est réversible.
 - `reset_admin` ne remet plus le mot de passe public de démonstration en
   production (ANO-013).
 - Django 5.2.15 → **5.2.18** : 9 alertes de sécurité corrigées (ANO-001).
+- Pillow 12.3.0 → **13.0.0** : 35 vulnérabilités publiées en octobre 2026,
+  signalées par le contrôle `pip-audit` et corrigées le jour même.
+- Python **3.11** minimum (exigence de Pillow 13) ; serveur en Python 3.12.
 
 ### Ajouté
 - Journal d'accès (connexions, échecs, blocages, exports,
@@ -73,8 +62,8 @@ la migration 0006 est réversible.
   affichés (ANO-009).
 - `STATIC_ROOT` absent du code versionné (suite de l'incident INC-001).
 - Sauvegarde `dump.json` non restaurable dans une base neuve (ANO-015) ;
-  `dump.json` et `dump.sql` régénérés au format v1.1.
-- Défauts d'affichage hérités de la v1.0 : vignettes de la galerie
+  `dump.json` et `dump.sql` régénérés au format V2.
+- Défauts d'affichage hérités de la V1 : vignettes de la galerie
   rognées, barres du dashboard vides, cases à cocher décalées (ANO-019).
 - Erreur 404 sur `/favicon.ico` à chaque visite : icône du site ajoutée.
 - 5 erreurs de validation HTML (W3C) sur les formulaires d'inscription et
@@ -88,11 +77,11 @@ la migration 0006 est réversible.
 - Logique métier sortie des vues : modules `etl.py`, `permissions.py`,
   `securite.py`, `statistiques.py`, `miniatures.py`.
 
-### Mise à jour depuis 1.0.0
-`bash outils/deployer.sh v1.1.0`,
+### Mise à jour depuis la V1
+`bash outils/deployer.sh V2`,
 puis **supprimer le mappage public `/media/`** dans l'onglet Web de PythonAnywhere.
 
-## [1.0.0] — 2026-09 (version soutenue)
+## V1 — septembre 2026 (version soutenue)
 
 ### Fonctionnalités
 - Plateforme multi-clients à 3 rôles (contributeur, data scientist,

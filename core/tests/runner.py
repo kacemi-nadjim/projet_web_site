@@ -3,7 +3,7 @@ Lanceur de tests PixBank : isole complètement les tests de l'environnement
 réel.
   - MEDIA_ROOT temporaire : les tests n'écrivent plus de fichiers dans le
     vrai dossier media/ (anomalie ANO-007 : des fichiers t_*.jpg laissés
-    par les tests de la v1.0 y traînaient) ;
+    par les tests de la V1 y traînaient) ;
   - hachage de mot de passe rapide (MD5) : réservé aux tests, il divise
     leur durée sans rien changer à la logique testée ;
   - journaux applicatifs neutralisés pendant les tests.

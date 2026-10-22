@@ -2,13 +2,13 @@
 # ============================================================
 # DEPLOYER.SH — Mise en production d'une version de PixBank
 # Usage (console Bash du serveur, environnement virtuel activé) :
-#     bash outils/deployer.sh v1.1.0
+#     bash outils/deployer.sh V2
 # Chaque étape s'arrête à la première erreur (set -e) : le site en ligne
 # n'est rechargé que si TOUT s'est bien passé.
 # ============================================================
 set -euo pipefail
 
-VERSION="${1:?Préciser la version à déployer, par exemple : v1.1.0}"
+VERSION="${1:?Préciser la version à déployer, par exemple : V2}"
 WSGI="${PIXBANK_WSGI:-/var/www/nadjimkacemi_pythonanywhere_com_wsgi.py}"
 URL="${PIXBANK_URL:-https://nadjimkacemi.pythonanywhere.com}"
 cd "$(dirname "$0")/.."

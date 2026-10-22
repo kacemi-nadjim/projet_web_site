@@ -1,4 +1,4 @@
-# Configuration des outils de qualité du code (v1.1)
+# Configuration des outils de qualité du code (V2)
 # Lancer : ruff check .   (analyse statique : erreurs, imports, style PEP 8)
 
 [tool.ruff]

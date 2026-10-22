@@ -11,7 +11,7 @@ def completer_empreintes(apps, schema_editor):
     """
     Prépare la contrainte d'unicité « image_unique_par_client » :
       1. calcule l'empreinte SHA-256 des images qui n'en avaient pas
-         (images ajoutées depuis le back-office en v1.0) ;
+         (images ajoutées depuis le back-office en V1) ;
       2. si deux images actives d'un même client ont la même empreinte
          (doublon historique), la plus récente est renommée pour ne pas
          bloquer la migration — aucune donnée n'est supprimée.

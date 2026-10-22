@@ -1,7 +1,7 @@
 """
 PERMISSIONS.PY — Règles d'accès centralisées.
 
-Avant la v1.1, la même condition était recopiée dans plusieurs vues.
+Avant la V2, la même condition était recopiée dans plusieurs vues.
 La regrouper ici garantit qu'elle est identique partout et permet de la
 tester une fois pour toutes (voir core/tests/test_permissions.py).
 """

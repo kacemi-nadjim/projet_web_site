@@ -10,7 +10,7 @@ Django génère le SQL automatiquement via les migrations (ORM).
 - Ajout d'un hash (empreinte) pour détecter les doublons à l'upload
 - L'Export enregistre désormais le détail de ce qui a été téléchargé
 
-ÉVOLUTIONS v1.1 (rattrapage) :
+ÉVOLUTIONS V2 (rattrapage) :
 - Index composites alignés sur les requêtes réelles (galerie, export,
   dashboard) -> mesures avant/après : outils/benchmark_bdd.py
 - Contrainte d'unicité PARTIELLE : l'anti-doublon est garanti par la base
@@ -134,7 +134,7 @@ class Image(models.Model):
 
     # Empreinte du fichier : sert à détecter les doublons à l'upload.
     # Deux fichiers identiques produisent le même hash SHA-256.
-    # (v1.1) Plus d'index simple sur ce champ : l'index unique partiel
+    # (V2) Plus d'index simple sur ce champ : l'index unique partiel
     # « image_unique_par_client » sert à la fois de garde-fou et d'index de
     # recherche pour l'anti-doublon. Sous PostgreSQL, l'ancien index en créait
     # en réalité deux (dont un pour les recherches LIKE, jamais utilisées).

@@ -245,7 +245,7 @@ def media_protege(request, chemin):
     """
     Seule porte d'accès aux fichiers déposés (photos, miniatures, ZIP).
 
-    Avant la v1.1, le dossier media/ était public : toute personne
+    Avant la V2, le dossier media/ était public : toute personne
     connaissant l'adresse d'une photo (visages, plaques) pouvait l'ouvrir
     sans être connectée, et un contributeur pouvait récupérer le ZIP de
     référence contenant les réponses attendues (anomalie ANO-004).

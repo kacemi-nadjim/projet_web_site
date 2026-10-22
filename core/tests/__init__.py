@@ -5,7 +5,7 @@ Lancer :           python manage.py test
 Avec couverture :  coverage run manage.py test && coverage report
 
 Organisation :
-  test_regles_metier.py   les 12 tests de la v1.0 (règles critiques)
+  test_regles_metier.py   les 12 tests de la V1 (règles critiques)
   test_securite.py        dépôt de fichiers, accès aux médias, force brute,
                           en-têtes, configuration de production
   test_images.py          dépôt, doublons, miniatures, galerie, export, dashboard

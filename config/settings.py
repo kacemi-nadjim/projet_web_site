@@ -1,7 +1,7 @@
 """
 SETTINGS.PY — Configuration du projet PixBank.
 
-Principe (v1.1) : le code est identique en développement et en production ;
+Principe (V2) : le code est identique en développement et en production ;
 seules les VARIABLES D'ENVIRONNEMENT changent (méthode « 12-factor app »).
 
 Variables reconnues :

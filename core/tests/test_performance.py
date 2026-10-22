@@ -3,8 +3,8 @@ TESTS DE PERFORMANCE — garde-fous automatiques.
 
 1. Le nombre de requêtes SQL d'une page ne doit PAS dépendre du nombre
    d'images (sinon : problème « N+1 », la page ralentit à mesure que la
-   base grossit). En v1.0, l'export faisait 1 requête de plus par image.
-2. Les index créés en v1.1 sont réellement utilisés par la base
+   base grossit). En V1, l'export faisait 1 requête de plus par image.
+2. Les index créés en V2 sont réellement utilisés par la base
    (vérification du plan d'exécution).
 Les mesures chiffrées (temps, avant/après) sont dans
 le dossier de projet (script outils/benchmark_bdd.py).

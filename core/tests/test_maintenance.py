@@ -119,7 +119,7 @@ class SupervisionTest(DonneesDeBase):
         self.assertEqual(r.json()["base_de_donnees"], "erreur")
 
     def test_version_affichee_en_pied_de_page(self):
-        self.assertContains(self.client.get("/"), f"v{settings.PIXBANK_VERSION}")
+        self.assertContains(self.client.get("/"), f'class="version">{settings.PIXBANK_VERSION}<')
 
 
 class ContraintesBaseTest(DonneesDeBase):

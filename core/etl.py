@@ -5,7 +5,7 @@ ETL.PY — Construction du dataset exporté (Extract -> Transform -> Load).
   Transform : une ligne CSV par image (catégories, dimensions, date, RGPD)
   Load      : un ZIP contenant annotations.csv + le dossier images/
 
-Optimisations v1.1 :
+Optimisations V2 :
   - plus de requête SQL par image (catégories préchargées : N+1 corrigé) ;
   - les JPEG/PNG sont déjà compressés : on les stocke tels quels dans le
     ZIP (ZIP_STORED) au lieu de les recompresser pour un gain quasi nul ;

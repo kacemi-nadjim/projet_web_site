@@ -1,7 +1,7 @@
 # PixBank — Banque d'images d'entraînement pour le deep learning
 
 Projet annuel — Bachelor Data & Business Intelligence (Nexa Digital School)
-Titre RNCP40857 « Chef de projet web » — **version 1.1.1**
+Titre RNCP40857 « Chef de projet web » — **V2**
 
 ## Site en ligne
 
@@ -174,7 +174,7 @@ Sur le serveur, le fichier `.env` fournit ces valeurs et le script de
 déploiement refuse de publier une version si cette commande signale le
 moindre avertissement.
 
-| Indicateur | v1.0 | v1.1 |
+| Indicateur | V1 | V2 |
 |---|---|---|
 | Tests automatisés | 12 | 125 |
 | Couverture du code | 62 % | 96 % |
