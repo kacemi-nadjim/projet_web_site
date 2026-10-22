@@ -67,6 +67,9 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000      # HSTS : impose HTTPS pendant 1 an
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+    # Derrière le serveur intermédiaire de l'hébergeur (PythonAnywhere), le
+    # HTTPS est signalé par cet en-tête : évite une boucle de redirections.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # En-têtes valables partout (dev et prod).
 SECURE_CONTENT_TYPE_NOSNIFF = True
