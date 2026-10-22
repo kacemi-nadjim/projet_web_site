@@ -183,6 +183,16 @@ moindre avertissement.
 | Galerie (24 photos) — poids / EcoIndex | 63,8 Mo / C | 0,25 Mo / A |
 | Export (24 photos) — requêtes SQL / temps | 31 / 1,6 s | 7 / 0,18 s |
 
+Les lignes « 24 photos » ont été mesurées avec 24 photos de smartphone
+(4032 × 3024, 2,7 Mo en moyenne). Pour mesurer l'export sur sa propre base :
+```bash
+python outils/mesurer_export.py            # compte lea_ds, 5 essais
+```
+Avec les données de démonstration (11 images validées, très légères), on
+obtient 7 requêtes en V2 contre 18 en V1 : la V1 faisait une requête de
+plus par image exportée (7 + 11). Le temps dépend surtout du poids des
+photos : il n'est significatif qu'avec de vraies photos.
+
 ## Documentation
 
 | Élément | Contenu |
