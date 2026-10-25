@@ -3,17 +3,36 @@
 {% block content %}
 <h1>Politique de confidentialité (RGPD)</h1>
 <div class="legal">
-<h2>Responsable du traitement</h2>
-<p>Chaque organisation cliente est responsable des données qu'elle dépose sur son espace cloisonné.</p>
-<h2>Données collectées</h2>
-<p>Comptes utilisateurs (e-mail, identifiant, rôle, organisation) ; images d'entraînement et leurs métadonnées (catégorie, dimensions, date). Certaines images peuvent contenir des <strong>données personnelles</strong> (visages, plaques d'immatriculation).</p>
-<h2>Base légale</h2>
-<p>Le dépôt d'images contenant des données personnelles est conditionné à la certification, par le contributeur, de disposer du consentement des personnes concernées ou d'une autre base légale (RGPD art. 6).</p>
+<h2>Qui traite vos données ?</h2>
+<p>Pour ce site de démonstration, le responsable du traitement est son éditeur (voir les <a href="{% url 'mentions' %}">mentions légales</a>). En exploitation réelle, chaque organisation cliente est responsable des images qu'elle dépose dans son espace cloisonné ; l'exploitant de la plateforme agit alors pour son compte, comme sous-traitant (article 28 du RGPD).</p>
+
+<h2>Données collectées, finalités et bases légales</h2>
+<ul class="legal-liste">
+<li>Compte utilisateur (identifiant, nom, e-mail, rôle, entreprise) : gérer les accès à la plateforme. Base légale : exécution du service demandé par l'organisation cliente.</li>
+<li>Images et métadonnées (catégories, dimensions, empreinte, date de dépôt) : constituer des jeux de données d'entraînement. Certaines images contiennent des données personnelles (visages, plaques) : le contributeur doit certifier disposer du consentement des personnes ou d'une autre base légale (article 6). Les miniatures affichées ne contiennent aucune métadonnée de localisation.</li>
+<li>Journal d'accès (identifiant saisi, adresse IP, date, type d'événement) : sécuriser la plateforme (détection des tentatives d'intrusion, blocage après plusieurs échecs de connexion). Base légale : intérêt légitime (sécurité).</li>
+<li>Demandes d'inscription et messages de contact (nom, e-mail, message) : répondre à votre demande. Base légale : votre consentement, recueilli dans le formulaire.</li>
+</ul>
+
+<h2>Durées de conservation</h2>
+<ul class="legal-liste">
+<li>Compte : tant qu'il est actif.</li>
+<li>Image supprimée : masquée immédiatement, puis effacée définitivement (fichiers compris) au bout de 30 jours.</li>
+<li>Journal d'accès : 180 jours, puis effacement automatique.</li>
+<li>Demandes d'inscription traitées et messages de contact : un an, puis effacement automatique.</li>
+</ul>
+
+<h2>Destinataires</h2>
+<p>Vos données ne sont accessibles qu'à l'administrateur de la plateforme et, pour les images, aux data scientists de votre propre organisation. Elles ne sont ni vendues ni cédées. Le site ne charge aucun script, aucune police et aucun traceur depuis un service tiers.</p>
+<p>L'hébergeur (PythonAnywhere) stocke les données pour le compte de l'éditeur. Les serveurs de l'offre utilisée pour la démonstration sont situés aux États-Unis ; pour une exploitation réelle, un hébergement dans l'Union européenne est préférable.</p>
+
+<h2>Sécurité</h2>
+<p>Échanges chiffrés (HTTPS), mots de passe jamais stockés en clair, cloisonnement strict entre organisations, fichiers accessibles uniquement après contrôle des droits, blocage des tentatives de connexion répétées.</p>
+
 <h2>Vos droits</h2>
-<p>Droit d'accès, de rectification et d'effacement. Toute image peut être supprimée par son déposant ; la suppression masque immédiatement l'image de la plateforme (suppression logique, puis effacement physique sur demande).</p>
+<p>Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité de vos données. Chaque contributeur peut supprimer lui-même ses images depuis la galerie. Pour exercer les autres droits, ou demander le retrait d'une image où vous apparaissez, utilisez le <a href="{% url 'contact' %}">formulaire de contact</a> : l'administrateur traite la demande depuis le back-office. Vous pouvez aussi adresser une réclamation à la CNIL (<a href="https://www.cnil.fr/">www.cnil.fr</a>).</p>
+
 <h2>Cookies</h2>
-<p>La plateforme utilise uniquement un cookie de session technique nécessaire à l'authentification. Aucun cookie publicitaire ou de traçage n'est déposé.</p>
-<h2>Durée de conservation</h2>
-<p>Les images sont conservées le temps de l'usage d'entraînement, puis archivées ou supprimées selon la politique de chaque organisation cliente.</p>
+<p>Le site dépose uniquement des cookies techniques : la session (nécessaire à la connexion), la protection des formulaires (CSRF) et la mémorisation de la fermeture du bandeau d'information. Aucun cookie publicitaire ou de mesure d'audience n'est utilisé.</p>
 </div>
 {% endblock %}

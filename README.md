@@ -31,7 +31,7 @@ des modèles de computer vision :
 - **Dashboard BI** : indicateurs, répartition par catégorie, historique des exports
 - **Module de labélisation** : lot de référence, travail du contributeur,
   contrôle qualité (complétude, catégories, IoU, images floues)
-- **RGPD** : consentement, effacement définitif après 30 jours, journal
+- **RGPD** : pages légales complètes, consentement, effacement définitif après 30 jours, formulaires effacés après un an, journal
   conservé 180 jours, aucun service tiers
 - **Sécurité** : anti force brute, journal d'accès, CSP, HTTPS/HSTS, anti
   bombe ZIP
@@ -154,7 +154,7 @@ Démo recommandée :
 ## Tests et qualité
 
 ```bash
-python manage.py test                              # 125 tests (~4 à 15 s selon le PC)
+python manage.py test                              # 130 tests (~4 à 15 s selon le PC)
 coverage run manage.py test && coverage report     # couverture : 96 %
 ruff check .  &&  bandit -r core config -x core/tests,core/migrations
 pip-audit -r requirements.txt
@@ -163,6 +163,19 @@ pip-audit -r requirements.txt
 Comparaison avec la V1 (étiquette Git `V1`), mêmes règles des deux côtés :
 `ruff check --isolated --select E,W,F,B --line-length 100 --extend-exclude core/migrations .`
 → 32 erreurs sur la V1, 0 sur la V2.
+
+**Audit d'accessibilité** (WCAG 2.1 A et AA, moteur axe-core, 16 pages),
+site lancé avec les données de démonstration :
+```bash
+pip install playwright && playwright install chromium
+cd outils/audits_web && npm install && cd ../..
+python outils/audit_accessibilite.py --base http://127.0.0.1:8000
+# → Pages auditées : 16 — éléments en défaut : 0
+```
+
+**Intégration continue** : le fichier `.github/workflows/qualite.yml` relance
+automatiquement sur GitHub `pip-audit`, `ruff`, `bandit`, les tests (SQLite
+et PostgreSQL 16) et `check --deploy`, à chaque envoi de code et chaque lundi.
 
 **Contrôle de la configuration de production** : sur un poste sans
 fichier `.env`, `manage.py` active le mode développement ; la commande
@@ -180,7 +193,8 @@ moindre avertissement.
 
 | Indicateur | V1 | V2 |
 |---|---|---|
-| Tests automatisés | 12 | 125 |
+| Tests automatisés | 12 | 130 |
+| Accessibilité (axe-core, WCAG 2.1 AA, 16 pages) | non mesurée | 0 élément en défaut |
 | Couverture du code | 62 % | 96 % |
 | Vulnérabilités des dépendances (`pip-audit`) | 9 | 0 |
 | Alertes `bandit` / erreurs `ruff` | 4 / 32 | 0 / 0 |
@@ -221,8 +235,9 @@ core/
   middleware.py      en-têtes de sécurité (CSP...)
   signals.py         alimentation du journal d'accès
   management/commands/  seed, sauvegarder, restaurer, purges, miniatures...
-  tests/             125 tests (unitaires, intégration, sécurité, performance)
+  tests/             130 tests (unitaires, intégration, sécurité, conformité, performance)
 templates/       pages HTML (mobile-first)
 static/          CSS, polices auto-hébergées, JS
-outils/          déploiement et outils de mesure (benchmark, EcoIndex)
+outils/          déploiement et outils de mesure (benchmark, EcoIndex, accessibilité)
+.github/         intégration continue (tests et audits à chaque envoi et chaque lundi)
 ```

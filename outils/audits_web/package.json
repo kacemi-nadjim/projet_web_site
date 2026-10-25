@@ -1,0 +1,6 @@
+{
+  "name": "pixbank-audits-web",
+  "private": true,
+  "description": "Moteur d'audit d'accessibilité utilisé par outils/audit_accessibilite.py (axe-core, WCAG 2.1 A/AA). Installation : npm install",
+  "dependencies": { "axe-core": "4.10.3" }
+}

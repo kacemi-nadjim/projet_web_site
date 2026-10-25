@@ -32,6 +32,12 @@ la migration 0006 est réversible.
   back-office.
 - Miniatures WebP générées au dépôt, sans métadonnées GPS.
 - Pagination de la galerie (24 images par page).
+- Effacement automatique, après un an, des demandes d'inscription traitées
+  et des messages de contact (commande `purger_demandes_et_messages`).
+- Audit d'accessibilité automatisé (`outils/audit_accessibilite.py`,
+  axe-core, WCAG 2.1 A et AA).
+- Intégration continue GitHub : tests et audits à chaque envoi et chaque
+  lundi (`.github/workflows/qualite.yml`).
 - Point de supervision `/sante/` (version + état de la base) ; alertes
   e-mail en cas d'erreur 500 ; journal applicatif `logs/pixbank.log`
   avec rotation.
@@ -68,9 +74,17 @@ la migration 0006 est réversible.
 - Erreur 404 sur `/favicon.ico` à chaque visite : icône du site ajoutée.
 - 5 erreurs de validation HTML (W3C) sur les formulaires d'inscription et
   de mot de passe (ANO-020) : 17 pages désormais valides.
+- Contrastes insuffisants (étiquettes « donnée personnelle », bouton
+  Supprimer, statuts, bouton principal) et liens du pied de page repérables
+  seulement par la couleur : 86 éléments en défaut selon axe-core → 0.
+- Mentions légales publiées « à compléter » : éditeur et hébergeur
+  renseignés ; politique de confidentialité réécrite (finalités, bases
+  légales, durées, droits) ; bandeau cookies exact (session, CSRF, bandeau).
+- `dump.sql` régénéré sans les sessions de connexion ni l'historique du
+  back-office.
 
 ### Qualité et tests
-- 12 → **125 tests** automatisés ; couverture **62 % → 96 %** ; suite
+- 12 → **130 tests** automatisés ; couverture **62 % → 96 %** ; suite
   validée sur SQLite et PostgreSQL.
 - `ruff` (PEP 8, erreurs, sécurité, Django) : 32 → 0 erreur ;
   `bandit` : 4 → 0 alerte ; `pip-audit` : 9 → 0 vulnérabilité.

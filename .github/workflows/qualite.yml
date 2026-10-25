@@ -1,0 +1,55 @@
+# INTÉGRATION CONTINUE — contrôles automatiques de PixBank sur GitHub.
+# Se lance à chaque envoi de code, à chaque demande de fusion, et CHAQUE
+# LUNDI à 6 h (UTC) même sans modification du code : une vulnérabilité
+# publiée dans une dépendance est ainsi signalée en moins de 7 jours
+# (retour d'expérience de l'alerte Pillow d'octobre 2026).
+# En cas d'échec, GitHub prévient par e-mail ; résultats : onglet « Actions ».
+name: Qualité
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  controles:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: pixbank_app
+          POSTGRES_PASSWORD: pixbank_ci
+          POSTGRES_DB: pixbank
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U pixbank_app"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Dépendances
+        run: pip install -r requirements-dev.txt
+      - name: Vulnérabilités connues des dépendances (pip-audit)
+        run: pip-audit -r requirements.txt
+      - name: Analyse statique (ruff) et sécurité du code (bandit)
+        run: |
+          ruff check .
+          bandit -q -r core config -x core/tests,core/migrations
+      - name: Tests sur SQLite
+        run: python manage.py test
+      - name: Tests sur PostgreSQL 16
+        env:
+          DATABASE_URL: postgres://pixbank_app:pixbank_ci@localhost:5432/pixbank
+        run: python manage.py test
+      - name: Configuration de production (check --deploy)
+        env:
+          DJANGO_DEBUG: "False"
+          DJANGO_SECRET_KEY: ci-${{ github.run_id }}-cle-de-controle-uniquement-0123456789abcdefgh
+          DJANGO_ALLOWED_HOSTS: nadjimkacemi.pythonanywhere.com
+        run: python manage.py check --deploy --fail-level WARNING
