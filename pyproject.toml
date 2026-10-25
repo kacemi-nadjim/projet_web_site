@@ -18,7 +18,6 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "core/tests/*" = ["S101", "S105", "S106", "S603", "S404", "E501"]
 "core/management/commands/seed.py" = ["S311"]   # aléatoire non cryptographique : données de démo
-"outils/verifier_navigateur.py" = ["E501"]      # longues expressions JavaScript de recette
 
 [tool.ruff.lint.isort]
 known-first-party = ["core", "config"]

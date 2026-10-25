@@ -149,7 +149,8 @@ class GalerieTest(DonneesDeBase):
         creer_image(self.wassa, self.contrib, "VALIDEE", "#010101", [self.animal])
         creer_image(self.wassa, self.contrib, "ATTENTE", "#020202", [self.visage])
         self.connecter(self.ds)
-        self.assertEqual(self.client.get(f"/galerie/?categorie={self.animal.id}").context["total"], 1)
+        reponse = self.client.get(f"/galerie/?categorie={self.animal.id}")
+        self.assertEqual(reponse.context["total"], 1)
         self.assertEqual(self.client.get("/galerie/?statut=ATTENTE").context["total"], 1)
         # Valeurs fantaisistes : ignorées au lieu de provoquer une erreur
         r = self.client.get("/galerie/?categorie=abc&statut=PIRATE")

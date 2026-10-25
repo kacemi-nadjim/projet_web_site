@@ -40,9 +40,11 @@ try:
             if True:  # bandeau cookies déjà accepté : captures lisibles
                 ctx.add_cookies([{"name": "cookie_ok", "value": "1", "url": BASE}])
             pg = ctx.new_page()
-            pg.on("console", lambda m: m.type in ("error", "warning") and problemes.append(f"{pg.url} console {m.type}: {m.text}"))
+            pg.on("console", lambda m: m.type in ("error", "warning")
+                  and problemes.append(f"{pg.url} console {m.type}: {m.text}"))
             pg.on("pageerror", lambda e: problemes.append(f"{pg.url} pageerror: {e}"))
-            pg.on("response", lambda r: r.status >= 400 and "/media/" not in r.url and problemes.append(f"HTTP {r.status} {r.url}"))
+            pg.on("response", lambda r: r.status >= 400 and "/media/" not in r.url
+                  and problemes.append(f"HTTP {r.status} {r.url}"))
             return ctx, pg
 
         def connexion(pg, u, mdp="demo1234"):
@@ -73,8 +75,10 @@ try:
         connexion(pg, "lea_ds")
         pg.goto(BASE + "/galerie/")
         pg.wait_for_load_state("networkidle")
-        nb_img = pg.evaluate("[...document.querySelectorAll('.grid img')].filter(i => i.complete && i.naturalWidth > 0).length")
-        print("galerie : images affichées =", nb_img, "/", pg.evaluate("document.querySelectorAll('.grid img').length"))
+        nb_img = pg.evaluate("[...document.querySelectorAll('.grid img')]"
+                             ".filter(i => i.complete && i.naturalWidth > 0).length")
+        nb_total = pg.evaluate("document.querySelectorAll('.grid img').length")
+        print("galerie : images affichées =", nb_img, "/", nb_total)
         pg.screenshot(path=SHOTS / "02_galerie.png", full_page=True)
         pg.goto(BASE + "/dashboard/")
         pg.wait_for_load_state("networkidle")
@@ -109,7 +113,9 @@ try:
         pg.check("#id_categories_0")
         pg.click("form.form-card button[type=submit]")
         pg.wait_for_load_state("networkidle")
-        print("dépôt piégé :", pg.inner_text("#id_fichiers_error") if pg.is_visible("#id_fichiers_error") else "PAS DE MESSAGE")
+        message = (pg.inner_text("#id_fichiers_error")
+                   if pg.is_visible("#id_fichiers_error") else "PAS DE MESSAGE")
+        print("dépôt piégé :", message)
         pg.screenshot(path=SHOTS / "06_depot_refuse.png", full_page=True)
         ctx.close()
 
@@ -133,7 +139,9 @@ try:
         pg.screenshot(path=SHOTS / "08_journal.png", full_page=True)
         pg.goto(BASE + "/admin/core/image/")
         pg.wait_for_load_state("networkidle")
-        apercus = pg.evaluate("[...document.querySelectorAll('th.field-apercu img, td.field-apercu img')].filter(i => i.naturalWidth > 0).length")
+        apercus = pg.evaluate(
+            "[...document.querySelectorAll('th.field-apercu img, td.field-apercu img')]"
+            ".filter(i => i.naturalWidth > 0).length")
         print("back-office : aperçus affichés =", apercus)
         pg.screenshot(path=SHOTS / "09_admin_images.png")
         ctx.close()

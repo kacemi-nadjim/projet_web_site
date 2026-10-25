@@ -160,6 +160,10 @@ ruff check .  &&  bandit -r core config -x core/tests,core/migrations
 pip-audit -r requirements.txt
 ```
 
+Comparaison avec la V1 (étiquette Git `V1`), mêmes règles des deux côtés :
+`ruff check --isolated --select E,W,F,B --line-length 100 --extend-exclude core/migrations .`
+→ 32 erreurs sur la V1, 0 sur la V2.
+
 **Contrôle de la configuration de production** : sur un poste sans
 fichier `.env`, `manage.py` active le mode développement ; la commande
 `check --deploy` affiche alors 5 avertissements attendus (HTTPS, cookies
