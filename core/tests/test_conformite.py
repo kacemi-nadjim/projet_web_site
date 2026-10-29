@@ -5,15 +5,19 @@ Chaque test vérifie le contenu réel (page servie ou état de la base), et
 pas seulement que la page s'affiche : leçon de l'incident INC-002.
 """
 
+import csv
 import io
+import zipfile
 from datetime import timedelta
 
 from django.core.management import call_command
 from django.utils import timezone
 
-from core.models import DemandeInscription, MessageContact
+from core.etl import cellule_sure
+from core.models import Category, DemandeInscription, MessageContact
 
 from .outils import DonneesDeBase
+from .test_images import creer_image
 
 
 class PurgeFormulairesTest(DonneesDeBase):
@@ -67,3 +71,55 @@ class PagesLegalesTest(DonneesDeBase):
         page = self.client.get("/")
         self.assertContains(page, "cookies techniques")
         self.assertNotContains(page, "uniquement un cookie de session")
+
+
+class InjectionDeFormuleTest(DonneesDeBase):
+    """OWASP A05 (injection) — signalé par le scan Semgrep : une cellule CSV
+    qui commence par = + - @ serait exécutée comme une formule par un tableur."""
+
+    def test_cellules_dangereuses_neutralisees(self):
+        for valeur in ("=HYPERLINK(\"http://x\")", "+1+1", "-2+3", "@SUM(A1)"):
+            with self.subTest(valeur):
+                self.assertEqual(cellule_sure(valeur), "'" + valeur)
+        self.assertEqual(cellule_sure("photo.jpg"), "photo.jpg")
+        self.assertEqual(cellule_sure(640), 640)
+
+    def test_export_neutralise_une_categorie_piegee(self):
+        piege = Category.objects.create(nom="=1+1")
+        creer_image(self.wassa, self.contrib, categories=[piege])
+        self.connecter(self.ds)
+        reponse = self.client.get("/exporter/")
+        contenu_zip = b"".join(reponse.streaming_content)
+        with zipfile.ZipFile(io.BytesIO(contenu_zip)) as z:
+            lignes = list(csv.reader(io.StringIO(z.read("annotations.csv").decode())))
+        self.assertEqual(lignes[1][1], "'=1+1")
+
+
+class LienEvitementTest(DonneesDeBase):
+    """RGAA 12.7 : un lien permet d'aller directement au contenu principal."""
+
+    def test_present_sur_les_pages(self):
+        self.connecter(self.ds)
+        for url in ("/", "/galerie/", "/dashboard/", "/contact/"):
+            with self.subTest(url):
+                page = self.client.get(url)
+                self.assertContains(page, 'href="#contenu"')
+                self.assertContains(page, 'id="contenu"')
+
+
+class CorrectionsDuScanZapTest(DonneesDeBase):
+    """Alertes du scan dynamique OWASP ZAP corrigées dans le code."""
+
+    def test_csp_sans_unsafe_inline_et_aucun_style_en_ligne(self):
+        self.connecter(self.ds)
+        for url in ("/", "/galerie/", "/dashboard/", "/contact/"):
+            with self.subTest(url):
+                page = self.client.get(url)
+                self.assertNotIn("unsafe-inline", page["Content-Security-Policy"])
+                self.assertNotContains(page, 'style="')
+
+    def test_cookie_csrf_inaccessible_au_javascript(self):
+        from django.conf import settings
+        self.assertTrue(settings.CSRF_COOKIE_HTTPONLY)
+        page = self.client.get("/contact/")
+        self.assertTrue(page.cookies["csrftoken"]["httponly"])

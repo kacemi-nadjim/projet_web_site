@@ -76,6 +76,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = "same-origin"
 X_FRAME_OPTIONS = "DENY"
 SESSION_COOKIE_HTTPONLY = True
+# Le jeton CSRF n'est lu par aucun script : cookie inaccessible au JavaScript
+# (alerte « Cookie No HttpOnly Flag » du scan OWASP ZAP corrigée).
+CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_AGE = 8 * 3600           # session de 8 h (une journée de travail)
 
 # ------------------------------------------------------------

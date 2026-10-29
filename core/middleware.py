@@ -13,9 +13,9 @@ site n'a pas besoin (caméra, micro, géolocalisation...).
 POLITIQUE_CSP = "; ".join([
     "default-src 'self'",
     "script-src 'self'",
-    # Quelques attributs style="" existent dans les gabarits (largeur des
-    # barres du dashboard) : on les autorise, sans autoriser aucun script.
-    "style-src 'self' 'unsafe-inline'",
+    # Aucun attribut style="" dans les pages : seule la feuille du site est
+    # autorisée (alerte « unsafe-inline » du scan OWASP ZAP corrigée).
+    "style-src 'self'",
     "img-src 'self' data:",
     "font-src 'self'",
     "form-action 'self'",

@@ -27,11 +27,23 @@ ENTETE_CSV = ["nom_fichier", "categories", "largeur", "hauteur",
               "date_upload", "donnee_personnelle"]
 
 
+# Injection de formule (OWASP A05, signalée par le scan Semgrep) : un tableur
+# exécute une cellule qui commence par l'un de ces caractères. On les
+# neutralise avec une apostrophe, qui force l'affichage en texte.
+DEBUTS_DE_FORMULE = ("=", "+", "-", "@", "\t", "\r")
+
+
+def cellule_sure(valeur):
+    texte = str(valeur)
+    return "'" + texte if texte.startswith(DEBUTS_DE_FORMULE) else valeur
+
+
 def ligne_csv(img):
     nom = img.fichier.name.split("/")[-1]
-    return [nom, img.labels(), img.largeur, img.hauteur,
-            img.date_upload.strftime("%Y-%m-%d"),
-            "oui" if img.contient_donnee_perso() else "non"]
+    return [cellule_sure(v) for v in (
+        nom, img.labels(), img.largeur, img.hauteur,
+        img.date_upload.strftime("%Y-%m-%d"),
+        "oui" if img.contient_donnee_perso() else "non")]
 
 
 def construire_dataset(images):

@@ -30,7 +30,7 @@
         <div class="bar-row">
             <span class="bar-label">{{ cat.nom }}{% if cat.donnee_personnelle %} <span class="dp-dot" title="Donnée personnelle"></span>{% endif %}</span>
             <span class="bar-track">
-                <span class="bar-fill" style="width: {% widthratio cat.n max_cat 100 %}%;"></span>
+                {% widthratio cat.n max_cat 20 as vingtieme %}<span class="bar-fill largeur-{{ vingtieme }}"></span>
             </span>
             <span class="bar-val">{{ cat.n }}</span>
         </div>

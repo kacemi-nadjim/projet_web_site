@@ -379,3 +379,39 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); box-sha
 
 /* Pages légales : listes */
 .legal-liste { margin: 0 0 .9rem 1.2rem; color: var(--ink-soft); display: grid; gap: .45rem; }
+
+/* Lien d'évitement (RGAA 12.7) : visible seulement quand il reçoit le focus */
+.lien-evitement { position: absolute; left: -9999px; top: .5rem; z-index: 200;
+  background: var(--ink); color: #fff; padding: .6rem 1rem; border-radius: var(--radius-sm); }
+.lien-evitement:focus { left: .5rem; }
+main:focus { outline: none; }
+
+/* Espacements utilitaires : remplacent les anciens attributs style="" pour
+   permettre une politique CSP stricte (style-src 'self', sans 'unsafe-inline'). */
+.espace-haut { margin-top: 1.2rem; }
+.espace-haut-petit { margin-top: .6rem; }
+.espace-bas { margin-bottom: 1rem; }
+.espace-vertical { margin: 1rem 0; }
+.espace-gauche { margin-left: .5rem; }
+/* Largeur des barres du dashboard par pas de 5 % (classe largeur-0 à largeur-20) */
+.bar-fill.largeur-0 { width: 0%; }
+.bar-fill.largeur-1 { width: 5%; }
+.bar-fill.largeur-2 { width: 10%; }
+.bar-fill.largeur-3 { width: 15%; }
+.bar-fill.largeur-4 { width: 20%; }
+.bar-fill.largeur-5 { width: 25%; }
+.bar-fill.largeur-6 { width: 30%; }
+.bar-fill.largeur-7 { width: 35%; }
+.bar-fill.largeur-8 { width: 40%; }
+.bar-fill.largeur-9 { width: 45%; }
+.bar-fill.largeur-10 { width: 50%; }
+.bar-fill.largeur-11 { width: 55%; }
+.bar-fill.largeur-12 { width: 60%; }
+.bar-fill.largeur-13 { width: 65%; }
+.bar-fill.largeur-14 { width: 70%; }
+.bar-fill.largeur-15 { width: 75%; }
+.bar-fill.largeur-16 { width: 80%; }
+.bar-fill.largeur-17 { width: 85%; }
+.bar-fill.largeur-18 { width: 90%; }
+.bar-fill.largeur-19 { width: 95%; }
+.bar-fill.largeur-20 { width: 100%; }
