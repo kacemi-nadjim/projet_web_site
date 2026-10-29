@@ -123,3 +123,15 @@ class CorrectionsDuScanZapTest(DonneesDeBase):
         self.assertTrue(settings.CSRF_COOKIE_HTTPONLY)
         page = self.client.get("/contact/")
         self.assertTrue(page.cookies["csrftoken"]["httponly"])
+
+
+class TableauxDefilantsTest(DonneesDeBase):
+    """RGAA 10.11 : les tableaux larges défilent dans leur cadre (page sans débordement à 320 px)."""
+
+    def test_tableaux_dans_un_cadre_defilant(self):
+        self.connecter(self.ds)
+        for url in ("/lots/", "/dashboard/"):
+            with self.subTest(url):
+                page = self.client.get(url).content.decode()
+                if "<table" in page:
+                    self.assertIn('class="table-defilante"', page)

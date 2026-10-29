@@ -10,7 +10,7 @@
 <p class="help">Cycle de labélisation : le manager dépose un lot d'images → le stagiaire labélise sur LabelMe → contrôle qualité automatique.</p>
 
 {% if batches %}
-<table class="data-table">
+<div class="table-defilante" role="region" aria-label="Tableau défilant" tabindex="0"><table class="data-table">
     <thead><tr><th>Lot</th><th>Images</th><th>Assigné à</th><th>Statut</th><th>Score</th><th></th></tr></thead>
     <tbody>
     {% for b in batches %}
@@ -24,7 +24,7 @@
         </tr>
     {% endfor %}
     </tbody>
-</table>
+</table></div>
 {% else %}
 <p class="empty">Aucun lot pour le moment.{% if user.is_data_scientist %} <a href="{% url 'batch_creer' %}">Créez le premier</a>.{% endif %}</p>
 {% endif %}

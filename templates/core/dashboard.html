@@ -52,14 +52,14 @@
 <section class="panel">
     <h2>Derniers exports</h2>
     {% if exports %}
-    <table class="data-table">
+    <div class="table-defilante" role="region" aria-label="Tableau défilant" tabindex="0"><table class="data-table">
         <thead><tr><th>Date</th><th>Data scientist</th><th>Images</th><th>Filtre</th></tr></thead>
         <tbody>
         {% for e in exports %}
             <tr><td>{{ e.date|date:"d/m/Y H:i" }}</td><td>{{ e.user.username }}</td><td>{{ e.nb_images }}</td><td>{{ e.filtre_applique }}</td></tr>
         {% endfor %}
         </tbody>
-    </table>
+    </table></div>
     {% else %}
     <p class="empty">Aucun export pour le moment.</p>
     {% endif %}

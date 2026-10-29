@@ -82,9 +82,14 @@ la migration 0006 est réversible.
   légales, durées, droits) ; bandeau cookies exact (session, CSRF, bandeau).
 - `dump.sql` régénéré sans les sessions de connexion ni l'historique du
   back-office.
+- Scans de sécurité (OWASP Top 10) : injection de formule dans le CSV exporté
+  neutralisée (Semgrep) ; politique CSP sans `unsafe-inline` et cookie CSRF
+  inaccessible au JavaScript (OWASP ZAP).
+- Accessibilité (RGAA) : lien d'évitement (12.7) ; tableaux défilant dans
+  leur cadre, page sans débordement à 320 px (10.11).
 
 ### Qualité et tests
-- 12 → **130 tests** automatisés ; couverture **62 % → 96 %** ; suite
+- 12 → **136 tests** automatisés ; couverture **62 % → 96 %** ; suite
   validée sur SQLite et PostgreSQL.
 - `ruff` (PEP 8, erreurs, sécurité, Django) : 32 → 0 erreur ;
   `bandit` : 4 → 0 alerte ; `pip-audit` : 9 → 0 vulnérabilité.

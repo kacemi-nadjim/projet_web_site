@@ -8,7 +8,7 @@ les données de démonstration (dump.json) et vérifie :
   - photos inaccessibles sans connexion ; miniatures affichées ;
   - export téléchargeable ; dépôt d'un fichier piégé refusé ;
   - blocage après 5 échecs de connexion ; aperçus du back-office ;
-  - pas de défilement horizontal sur mobile (390 px) ;
+  - pas de défilement horizontal sur mobile (320 px, RGAA 10.11) ;
 et enregistre des captures d'écran.
 
 Usage (site lancé avec : python manage.py loaddata dump.json && python manage.py runserver) :
@@ -93,14 +93,18 @@ try:
         print("export téléchargé :", dl.value.suggested_filename)
         ctx.close()
 
-        # 4. Mobile
-        ctx, pg = page_neuve(390)
+        # 4. Mobile : 320 px, largeur de référence du RGAA (critère 10.11)
+        ctx, pg = page_neuve(320)
         connexion(pg, "lea_ds")
-        pg.goto(BASE + "/galerie/")
-        pg.wait_for_load_state("networkidle")
-        largeur = pg.evaluate("document.documentElement.scrollWidth")
-        print("mobile 390 px : largeur de page =", largeur)
-        pg.screenshot(path=SHOTS / "05_galerie_mobile.png")
+        for chemin in ("/", "/galerie/", "/dashboard/", "/lots/", "/lots/1/", "/contact/"):
+            pg.goto(BASE + chemin)
+            pg.wait_for_load_state("networkidle")
+            largeur = pg.evaluate("document.documentElement.scrollWidth")
+            print(f"mobile 320 px : {chemin} largeur de page = {largeur}")
+            if largeur > 320:
+                problemes.append(f"débordement horizontal à 320 px sur {chemin} ({largeur} px)")
+            if chemin == "/galerie/":
+                pg.screenshot(path=SHOTS / "05_galerie_mobile.png")
         ctx.close()
 
         # 5. Dépôt d'un fichier piégé (karim_contrib)

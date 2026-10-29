@@ -137,7 +137,7 @@ python manage.py loaddata dump.json
 
 | Vérification | Résultat |
 |---|---|
-| Recette automatisée dans Chromium (`outils/verifier_navigateur.py`) : parcours complet, ordinateur et mobile (390 px) | 0 erreur JavaScript, 0 ressource en erreur, aucun débordement horizontal |
+| Recette automatisée dans Chromium (`outils/verifier_navigateur.py`) : parcours complet, ordinateur et mobile (320 px, largeur de référence du RGAA) | 0 erreur JavaScript, 0 ressource en erreur, aucun débordement horizontal |
 | Analyse des propriétés CSS (`outils/compatibilite_css/`, base de données « Can I use ») pour les 2 dernières versions de Chrome, Edge, Firefox, Safari, Safari iOS, Chrome Android et Firefox ESR | Aucune propriété non prise en charge |
 | JavaScript | Un seul petit script (bandeau cookies), écrit en JavaScript standard compatible avec tous les navigateurs |
 | Validité du HTML (validateur W3C, 17 pages) | 0 erreur, 0 avertissement |
@@ -154,7 +154,7 @@ Démo recommandée :
 ## Tests et qualité
 
 ```bash
-python manage.py test                              # 130 tests (~4 à 15 s selon le PC)
+python manage.py test                              # 136 tests (~4 à 15 s selon le PC)
 coverage run manage.py test && coverage report     # couverture : 96 %
 ruff check .  &&  bandit -r core config -x core/tests,core/migrations
 pip-audit -r requirements.txt
@@ -172,6 +172,19 @@ cd outils/audits_web && npm install && cd ../..
 python outils/audit_accessibilite.py --base http://127.0.0.1:8000
 # → Pages auditées : 16 — éléments en défaut : 0
 ```
+
+**Scans de sécurité** (référentiel OWASP Top 10, 2025) :
+```bash
+# Analyse statique : règles de sécurité Django / Python de Semgrep (classées OWASP)
+pip install semgrep && git clone --depth 1 https://github.com/semgrep/semgrep-rules
+semgrep scan --metrics=off --config semgrep-rules/python/django/security \
+  --config semgrep-rules/python/lang/security --exclude core/tests --exclude core/migrations .
+# Test dynamique : OWASP ZAP (exploration + scan actif) sur le site lancé
+zap.sh -cmd -quickurl http://127.0.0.1:8000/ -quickout rapport_zap.html
+```
+Résultats sur la V2 : Semgrep, 6 signalements (1 vraie faiblesse corrigée :
+injection de formule dans le CSV exporté ; 5 faux positifs expliqués dans le
+dossier) ; ZAP, aucune alerte de risque élevé ou moyen.
 
 **Intégration continue** : le fichier `.github/workflows/qualite.yml` relance
 automatiquement sur GitHub `pip-audit`, `ruff`, `bandit`, les tests (SQLite
@@ -193,7 +206,7 @@ moindre avertissement.
 
 | Indicateur | V1 | V2 |
 |---|---|---|
-| Tests automatisés | 12 | 130 |
+| Tests automatisés | 12 | 136 |
 | Accessibilité (axe-core, WCAG 2.1 AA, 16 pages) | non mesurée | 0 élément en défaut |
 | Couverture du code | 62 % | 96 % |
 | Vulnérabilités des dépendances (`pip-audit`) | 9 | 0 |
@@ -235,7 +248,7 @@ core/
   middleware.py      en-têtes de sécurité (CSP...)
   signals.py         alimentation du journal d'accès
   management/commands/  seed, sauvegarder, restaurer, purges, miniatures...
-  tests/             130 tests (unitaires, intégration, sécurité, conformité, performance)
+  tests/             136 tests (unitaires, intégration, sécurité, conformité, performance)
 templates/       pages HTML (mobile-first)
 static/          CSS, polices auto-hébergées, JS
 outils/          déploiement et outils de mesure (benchmark, EcoIndex, accessibilité)

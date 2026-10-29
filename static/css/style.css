@@ -415,3 +415,8 @@ main:focus { outline: none; }
 .bar-fill.largeur-18 { width: 90%; }
 .bar-fill.largeur-19 { width: 95%; }
 .bar-fill.largeur-20 { width: 100%; }
+
+/* Tableaux larges : ils défilent dans leur propre cadre, la page ne déborde
+   jamais horizontalement, même à 320 px de large (RGAA 10.11). */
+.table-defilante { overflow-x: auto; max-width: 100%; }
+.table-defilante:focus-visible { box-shadow: var(--ring); outline: none; }
