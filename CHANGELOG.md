@@ -84,7 +84,9 @@ la migration 0006 est réversible.
   back-office.
 - Scans de sécurité (OWASP Top 10) : injection de formule dans le CSV exporté
   neutralisée (Semgrep) ; politique CSP sans `unsafe-inline` et cookie CSRF
-  inaccessible au JavaScript (OWASP ZAP).
+  inaccessible au JavaScript (OWASP ZAP). La confirmation avant suppression
+  d'une image, écrite dans la page et donc bloquée par la CSP, passe par un
+  script séparé (`static/js/confirmation.js`).
 - Accessibilité (RGAA) : lien d'évitement (12.7) ; tableaux défilant dans
   leur cadre, page sans débordement à 320 px (10.11).
 

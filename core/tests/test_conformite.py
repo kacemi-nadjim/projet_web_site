@@ -111,12 +111,18 @@ class CorrectionsDuScanZapTest(DonneesDeBase):
     """Alertes du scan dynamique OWASP ZAP corrigées dans le code."""
 
     def test_csp_sans_unsafe_inline_et_aucun_style_en_ligne(self):
+        # Une image de l'utilisateur fait apparaître le bouton Supprimer dans la galerie.
+        creer_image(self.wassa, self.ds)
         self.connecter(self.ds)
         for url in ("/", "/galerie/", "/dashboard/", "/contact/"):
             with self.subTest(url):
                 page = self.client.get(url)
                 self.assertNotIn("unsafe-inline", page["Content-Security-Policy"])
                 self.assertNotContains(page, 'style="')
+                # Aucun gestionnaire d'événement écrit dans la page (onclick, onsubmit...) :
+                # la CSP le bloquerait. La confirmation passe par confirmation.js.
+                self.assertNotRegex(page.content.decode(), r"<[^>]*\son[a-z]+=")
+        self.assertContains(self.client.get("/galerie/"), 'data-confirmation="')
 
     def test_cookie_csrf_inaccessible_au_javascript(self):
         from django.conf import settings

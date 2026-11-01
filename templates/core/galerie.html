@@ -48,7 +48,7 @@
             </p>
             <p class="card-meta">{{ image.largeur }}×{{ image.hauteur }} px · {{ image.date_upload|date:"d/m/Y" }} · {{ image.uploaded_by.username }}</p>
             {% if image.uploaded_by == user or user.is_admin_metier %}
-            <form method="post" action="{% url 'supprimer_image' image.id %}" onsubmit="return confirm('Supprimer cette image ?');">
+            <form method="post" action="{% url 'supprimer_image' image.id %}" data-confirmation="Supprimer cette image ?">
                 {% csrf_token %}<button type="submit" class="btn-danger">Supprimer</button>
             </form>
             {% endif %}

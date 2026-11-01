@@ -139,7 +139,7 @@ python manage.py loaddata dump.json
 |---|---|
 | Recette automatisée dans Chromium (`outils/verifier_navigateur.py`) : parcours complet, ordinateur et mobile (320 px, largeur de référence du RGAA) | 0 erreur JavaScript, 0 ressource en erreur, aucun débordement horizontal |
 | Analyse des propriétés CSS (`outils/compatibilite_css/`, base de données « Can I use ») pour les 2 dernières versions de Chrome, Edge, Firefox, Safari, Safari iOS, Chrome Android et Firefox ESR | Aucune propriété non prise en charge |
-| JavaScript | Un seul petit script (bandeau cookies), écrit en JavaScript standard compatible avec tous les navigateurs |
+| JavaScript | Deux petits scripts dans des fichiers séparés (bandeau cookies, confirmation avant suppression), écrits en JavaScript standard compatible avec tous les navigateurs |
 | Validité du HTML (validateur W3C, 17 pages) | 0 erreur, 0 avertissement |
 
 Le site n'utilise ni framework JavaScript ni fonctionnalité expérimentale :
@@ -154,7 +154,7 @@ Démo recommandée :
 ## Tests et qualité
 
 ```bash
-python manage.py test                              # 136 tests (~4 à 15 s selon le PC)
+python manage.py test                              # 136 tests (~4 à 25 s selon le PC)
 coverage run manage.py test && coverage report     # couverture : 96 %
 ruff check .  &&  bandit -r core config -x core/tests,core/migrations
 pip-audit -r requirements.txt
