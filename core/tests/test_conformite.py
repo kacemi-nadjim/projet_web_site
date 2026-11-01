@@ -126,7 +126,8 @@ class CorrectionsDuScanZapTest(DonneesDeBase):
 
 
 class TableauxDefilantsTest(DonneesDeBase):
-    """RGAA 10.11 : les tableaux larges défilent dans leur cadre (page sans débordement à 320 px)."""
+    """RGAA 10.11 : les tableaux larges défilent dans leur cadre
+    (page sans débordement à 320 px)."""
 
     def test_tableaux_dans_un_cadre_defilant(self):
         self.connecter(self.ds)
