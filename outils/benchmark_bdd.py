@@ -113,7 +113,9 @@ def peupler(nb_images, graine=42):
 def analyser():
     from django.db import connection
     with connection.cursor() as cur:
-        cur.execute("ANALYZE")
+        # PostgreSQL : VACUUM met aussi à jour la carte de visibilité, comme le fait
+        # l'autovacuum en production ; sinon un comptage ne peut pas lire que l'index.
+        cur.execute("VACUUM ANALYZE" if connection.vendor == "postgresql" else "ANALYZE")
 
 
 def index_v11():

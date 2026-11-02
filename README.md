@@ -211,7 +211,7 @@ moindre avertissement.
 | Couverture du code | 62 % | 96 % |
 | Vulnérabilités des dépendances (`pip-audit`) | 9 | 0 |
 | Alertes `bandit` / erreurs `ruff` | 4 / 32 | 0 / 0 |
-| Galerie (24 photos) — poids / EcoIndex | 63,8 Mo / C | 0,25 Mo / A |
+| Galerie (24 photos) — poids / EcoIndex | 63,8 Mo / C | 0,26 Mo / A |
 | Export (24 photos) — requêtes SQL / temps | 31 / 1,6 s | 7 / 0,18 s |
 
 Les lignes « 24 photos » ont été mesurées avec 24 photos de smartphone

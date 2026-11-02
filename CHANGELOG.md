@@ -53,10 +53,10 @@ la migration 0006 est réversible.
 ### Performance et éco-conception
 - Index partiels (galerie, statuts), contrainte d'unicité partielle
   (anti-doublon garanti par la base), contrainte CHECK sur le score
-  qualité. Galerie : requête **10 à 22 fois plus rapide** sur 50 000 images.
+  qualité. Galerie : requête **8 à 22 fois plus rapide** sur 50 000 images.
 - Export : 31 → 7 requêtes SQL, **1,6 s → 0,18 s** (plus de N+1 ni de
   recompression des JPEG) (ANO-005).
-- Galerie : **63,8 Mo → 0,25 Mo** par affichage, EcoIndex **C → A**.
+- Galerie : **63,8 Mo → 0,26 Mo** par affichage, EcoIndex **C → A**.
 - Polices auto-hébergées : plus aucun appel à Google (ANO-014).
 - Index de la table des images 23 % plus légers (PostgreSQL).
 
