@@ -94,7 +94,7 @@ Ces trois procédures ont été vérifiées sur une installation neuve
 
 ## Identifiants de test
 
-Mot de passe identique pour tous les comptes de démonstration : **demo1234**
+Mot de passe identique pour les cinq comptes ci-dessous : **demo1234**
 
 | Compte | Rôle | Entreprise | À tester |
 |---|---|---|---|
