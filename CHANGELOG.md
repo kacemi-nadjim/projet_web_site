@@ -1,6 +1,6 @@
 # Journal des modifications — PixBank
 
-## V2 — octobre 2026
+## V2 — octobre et novembre 2026
 
 Version de consolidation : sécurité, performance, éco-conception,
 tests et exploitation. Aucune fonctionnalité existante n'a été retirée ;
@@ -24,6 +24,9 @@ la migration 0006 est réversible.
 - Django 5.2.15 → **5.2.18** : 9 alertes de sécurité corrigées (ANO-001).
 - Pillow 12.3.0 → **13.0.0** : 35 vulnérabilités publiées en octobre 2026,
   signalées par le contrôle `pip-audit` et corrigées le jour même.
+- Django 5.2.18 → **5.2.19** : correctif de sécurité publié le 3 novembre
+  2026 (5 failles ; une seule concerne PixBank : la lecture en mémoire des
+  fichiers envoyés en base64, gravité faible), appliqué le jour même.
 - Python **3.11** minimum (exigence de Pillow 13) ; serveur en Python 3.12.
 
 ### Ajouté

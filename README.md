@@ -42,7 +42,7 @@ des modèles de computer vision :
 
 | Brique | Techno | Justification |
 |---|---|---|
-| Back-end | Django 5.2 LTS (5.2.18) | Framework Python « piles incluses » : sécurité native (CSRF, injections SQL, XSS), ORM, back-office ; maintenu jusqu'en avril 2028 |
+| Back-end | Django 5.2 LTS (5.2.19) | Framework Python « piles incluses » : sécurité native (CSRF, injections SQL, XSS), ORM, back-office ; maintenu jusqu'en avril 2028 |
 | Front-end | Gabarits Django (rendu serveur) + CSS mobile-first | Site orienté contenu : rapide, sans framework JavaScript à télécharger |
 | Base de données | PostgreSQL 16 (production, via `DATABASE_URL`) / SQLite (développement) | Données structurées et reliées → relationnel ; index partiels et contraintes |
 | Images | Pillow | Vérification du contenu, dimensions, miniatures WebP |
